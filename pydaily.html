@@ -1,0 +1,2270 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PyDaily - Python Notes Tracker</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--ink:#1d2433;--mute:#6b7488;--line:#e3e6ef;--pri:#3b6cf6;--pri-ink:#fff;--ok:#1f9d63;--warn:#e08a00;--bad:#d64545;--soft:#eef2ff}
+body.dark{--bg:#12151d;--card:#1b2030;--ink:#e8ecf6;--mute:#98a2b8;--line:#2b3247;--pri:#6d93ff;--pri-ink:#0d1220;--ok:#43c88a;--warn:#f0a93b;--bad:#ff7a7a;--soft:#232b44}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--ink)}
+header{display:flex;align-items:center;gap:10px;padding:10px 16px;background:var(--card);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+header h1{font-size:18px;margin:0;flex:1}
+button,.btn{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:7px 12px;border-radius:8px;text-decoration:none;display:inline-block}
+button:hover,.btn:hover{border-color:var(--pri)}
+button.pri{background:var(--pri);color:var(--pri-ink);border-color:var(--pri)}
+button.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+button.warn{background:var(--warn);color:#fff;border-color:var(--warn)}
+button.bad{background:var(--bad);color:#fff;border-color:var(--bad)}
+#menu{display:none}
+.layout{display:grid;grid-template-columns:290px 1fr;min-height:calc(100vh - 54px)}
+aside{border-right:1px solid var(--line);background:var(--card);padding:12px;overflow:auto;max-height:calc(100vh - 54px);position:sticky;top:54px}
+aside input{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);margin-bottom:8px}
+.nav button{width:100%;text-align:left;margin-bottom:4px}
+.item{display:flex;gap:8px;align-items:center;padding:7px 8px;border-radius:8px;cursor:pointer}
+.item:hover{background:var(--soft)}
+.item.cur{background:var(--soft);outline:1px solid var(--pri)}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--line);flex:none}
+.dot.understood{background:var(--ok)}.dot.again{background:var(--warn)}
+.item small{margin-left:auto;color:var(--mute)}
+main{padding:20px;max-width:900px;width:100%}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.grow{flex:1}
+h2{margin:0 0 6px;font-size:22px}h3{margin:0 0 8px;font-size:16px}
+.mute{color:var(--mute)}
+.badge{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;background:var(--soft);color:var(--ink)}
+.badge.understood{background:var(--ok);color:#fff}.badge.again{background:var(--warn);color:#fff}
+.tabs{display:flex;gap:6px;margin:14px 0;flex-wrap:wrap}
+.tabs button.on{background:var(--pri);color:var(--pri-ink);border-color:var(--pri)}
+textarea{width:100%;min-height:160px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;resize:vertical}
+input[type=time],input[type=number]{padding:6px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink)}
+ul.pts{padding-left:18px;margin:6px 0}ul.pts li{margin:4px 0}
+.stars{font-size:28px;color:var(--warn);letter-spacing:2px}
+.bar{height:10px;background:var(--line);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--ok)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.stat{background:var(--soft);border-radius:10px;padding:12px;text-align:center}
+.stat b{font-size:26px;display:block}
+.flash{min-height:150px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:20px;padding:20px;border:2px dashed var(--line);border-radius:12px;cursor:pointer;background:var(--soft)}
+.rec{animation:pulse 1s infinite}@keyframes pulse{50%{opacity:.5}}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:10px;opacity:0;pointer-events:none;transition:.25s;z-index:9;max-width:90vw}
+#toast.show{opacity:1}
+table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
+@media(max-width:800px){
+ .layout{grid-template-columns:1fr}
+ aside{display:none;position:fixed;top:54px;left:0;bottom:0;width:85%;max-width:320px;z-index:6;max-height:none}
+ aside.open{display:block}
+ #menu{display:inline-block}
+ main{padding:12px}
+}
+pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow:auto;margin:6px 0 12px;font:13px/1.5 ui-monospace,Consolas,monospace}
+h4{margin:16px 0 4px;font-size:15px;color:var(--pri)}
+.grp{margin:12px 6px 4px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+</style>
+</head>
+<body>
+<header>
+  <button id="menu" data-a="menu">&#9776;</button>
+  <h1>&#128013; PyDaily</h1>
+  <button data-a="dark" title="Dark mode">&#9680;</button>
+</header>
+<div class="layout">
+  <aside id="side">
+    <div class="nav">
+      <button data-a="view" data-v="today">&#128197; Today's reading</button>
+      <button data-a="view" data-v="dash">&#128202; Progress &amp; settings</button>
+    </div>
+    <input id="q" placeholder="Search topics...">
+    <div id="list"></div>
+  </aside>
+  <main id="main"></main>
+</div>
+<div id="toast"></div>
+
+<script>
+/* ---------- Topic data (summaries are written in my own words; see W3Schools pages for the full tutorial) ---------- */
+const W='https://www.w3schools.com/python/';
+const T=[
+{id:'intro',t:'Introduction',u:'python_intro.asp',s:'Python is a high-level, interpreted, general-purpose language famous for readable code. It is used for web apps, automation, data analysis and AI.',p:[['interpreted','Code is run line by line by an interpreter, with no separate compile step'],['high-level','Readable syntax and automatic memory handling'],['general-purpose','Used for web development, scripting, data science and AI'],['print','The print function shows output on the screen'],['python file','Save code in a .py file and run it with the python command']]},
+{id:'syntax',t:'Syntax',u:'python_syntax.asp',s:'Python marks code blocks with indentation instead of curly braces. Statements end at the line break.',p:[['indentation','Spaces at the start of a line define which block the code belongs to'],['colon','A colon opens a block after if, for, def and similar statements'],['case sensitive','Name and NAME are two different variables'],['newline','A statement normally ends at the end of the line, no semicolon needed'],['interpreter','You can run a file or type commands in the interactive command line']]},
+{id:'comments',t:'Comments',u:'python_comments.asp',s:'Comments are notes for humans that Python ignores. A hash sign starts a single-line comment.',p:[['hash','A hash character starts a comment that runs to the end of the line'],['multiline','Python has no special multi-line comment, use several hash lines or a triple quoted string'],['ignored','The interpreter skips comments completely'],['document','Use comments to explain why code does something']]},
+{id:'variables',t:'Variables',u:'python_variables.asp',s:'A variable is a name that points to a value. It is created the moment you assign to it and its type can change later.',p:[['assignment','A variable is created when you assign a value with the equals sign'],['dynamic typing','No need to declare a type, a variable can change type later'],['naming','Names use letters, digits and underscores, cannot start with a digit, and are case sensitive'],['multiple','You can assign several variables in one line, for example a, b = 1, 2'],['global','The global keyword lets a function change a variable defined outside it']]},
+{id:'datatypes',t:'Data Types',u:'python_datatypes.asp',s:'Every value has a type. Python has built-in types for text, numbers, sequences, mappings, sets, booleans and None.',p:[['text','str is the text type'],['numeric','int, float and complex hold numbers'],['sequence','list, tuple and range are sequence types'],['mapping','dict stores key value pairs'],['set','set and frozenset store unique items'],['type','The type function tells you the type of a value'],['none','None means no value']]},
+{id:'numbers',t:'Numbers',u:'python_numbers.asp',s:'Python has integers, floats and complex numbers. Integers can be arbitrarily large, and the random and math modules add more tools.',p:[['integer','Whole numbers of unlimited length'],['float','Numbers with a decimal point'],['complex','Numbers with an imaginary part written with j'],['random','The random module generates random numbers'],['arithmetic','Normal maths operators work across numeric types']]},
+{id:'casting',t:'Casting',u:'python_casting.asp',s:'Casting converts a value from one type to another using constructor functions such as int, float and str.',p:[['int','int converts to a whole number and cuts off decimals'],['float','float converts to a decimal number'],['str','str converts a value to text'],['constructor','Casting is done with the type name used as a function'],['valueerror','Converting something invalid, like int of the text abc, raises an error']]},
+{id:'strings',t:'Strings',u:'python_strings.asp',s:'Strings are text in single or double quotes. They are indexed, sliceable, immutable and come with many handy methods.',p:[['quotes','Single or double quotes both work, triple quotes allow several lines'],['slicing','Use start colon end inside square brackets to take part of a string'],['len','The len function returns the number of characters'],['methods','upper, lower, strip, replace and split are common string methods'],['f string','An f before the quotes lets you put variables inside curly braces'],['immutable','Strings cannot be changed in place, methods return new strings'],['escape','A backslash lets you include special characters']]},
+{id:'booleans',t:'Booleans',u:'python_booleans.asp',s:'A boolean is either True or False. Comparisons give booleans and most empty or zero values count as false.',p:[['true false','The two boolean values, written with a capital first letter'],['comparison','Comparing two values gives a boolean result'],['bool','The bool function tells whether a value counts as true or false'],['falsy','Zero, empty text, empty collections and None evaluate to false']]},
+{id:'operators',t:'Operators',u:'python_operators.asp',s:'Operators act on values. Python groups them into arithmetic, assignment, comparison, logical, identity, membership and bitwise.',p:[['arithmetic','Plus, minus, multiply, divide, floor division, modulus and exponent'],['comparison','Equal, not equal, greater than, less than and similar'],['logical','and, or and not combine conditions'],['identity','is checks whether two names refer to the same object'],['membership','in checks whether a value is inside a sequence'],['assignment','Shortcuts like plus equals update a variable']]},
+{id:'lists',t:'Lists',u:'python_lists.asp',s:'A list is an ordered, changeable collection in square brackets that allows duplicates.',p:[['ordered','Items keep their position and are accessed by index starting at zero'],['changeable','You can modify, add and remove items after creating the list'],['duplicates','The same value may appear many times'],['append','append adds to the end and insert adds at a position'],['remove','remove deletes by value and pop deletes by index'],['sort','sort orders the list in place'],['comprehension','A short way to build a new list from another one']]},
+{id:'tuples',t:'Tuples',u:'python_tuples.asp',s:'A tuple is an ordered collection in round brackets that cannot be changed after creation.',p:[['unchangeable','Items cannot be added, removed or replaced'],['ordered','Items keep their order and have an index'],['parentheses','Written with round brackets'],['single item','A one-item tuple needs a trailing comma'],['unpacking','You can assign tuple items into separate variables']]},
+{id:'sets',t:'Sets',u:'python_sets.asp',s:'A set holds unique items with no order and no index. It is great for removing duplicates and for maths-style operations.',p:[['unordered','No fixed position, so no indexing'],['unique','Duplicate values are ignored'],['add','add inserts one item and update inserts many'],['union','Combine two sets into one'],['intersection','Keep only items found in both sets']]},
+{id:'dictionaries',t:'Dictionaries',u:'python_dictionaries.asp',s:'A dictionary stores key and value pairs in curly braces. Keys are unique and you look values up by key.',p:[['key value','Data is stored as pairs, you read a value using its key'],['unique keys','A key can appear only once, a repeat overwrites the old value'],['ordered','Since Python 3.7 dictionaries remember insertion order'],['get','get returns a value safely without an error if the key is missing'],['items','keys, values and items give views of the dictionary'],['update','update adds or changes entries']]},
+{id:'ifelse',t:'If...Else',u:'python_conditions.asp',s:'Conditions let code choose a path. Use if, elif and else, and remember that indentation defines each branch.',p:[['if','Runs a block only when the condition is true'],['elif','Checks another condition if the earlier ones failed'],['else','Runs when no earlier condition matched'],['and or','Combine conditions with logical operators'],['nested','An if can sit inside another if'],['shorthand','A one-line form puts the value, the condition and the else value on one line']]},
+{id:'while',t:'While Loops',u:'python_while_loops.asp',s:'A while loop repeats its block as long as a condition stays true, so something inside must eventually make it false.',p:[['condition','The loop runs while the condition is true'],['break','Stops the loop immediately'],['continue','Skips to the next iteration'],['else','An else block runs when the condition becomes false'],['infinite','Forgetting to update the condition creates a loop that never ends']]},
+{id:'for',t:'For Loops',u:'python_for_loops.asp',s:'A for loop walks through each item of a sequence such as a list, string or range.',p:[['iterate','Visits each item in a list, tuple, string, set or dictionary'],['range','range produces a sequence of numbers to loop over'],['break','Exits the loop early'],['continue','Skips the current item'],['nested','A loop inside another loop'],['pass','A placeholder when a block needs no code']]},
+{id:'functions',t:'Functions',u:'python_functions.asp',s:'A function is a reusable block of code defined with def and run when called. It can take parameters and return a value.',p:[['def','The keyword that defines a function'],['parameters','Names in the definition, while arguments are the values you pass in'],['return','Sends a value back to the caller'],['default','A parameter can have a default value used when none is given'],['args','args collects extra positional arguments and kwargs collects extra keyword arguments'],['recursion','A function that calls itself']]},
+{id:'lambda',t:'Lambda',u:'python_lambda.asp',s:'A lambda is a small anonymous function limited to a single expression.',p:[['anonymous','A function without a name'],['expression','It can hold only one expression, whose value is returned'],['arguments','It can take any number of arguments'],['map filter','Often used with map, filter and sorted']]},
+{id:'classes',t:'Classes and Objects',u:'python_classes.asp',s:'A class is a blueprint and an object is an instance made from it. Classes bundle data and behavior together.',p:[['class','The blueprint that describes properties and methods'],['object','An instance created from a class'],['init','The init method runs when an object is created and sets its starting values'],['self','Refers to the current object inside methods'],['methods','Functions that belong to a class'],['properties','Variables that belong to an object']]},
+{id:'inheritance',t:'Inheritance',u:'python_inheritance.asp',s:'Inheritance lets a child class reuse and extend the properties and methods of a parent class.',p:[['parent','The class being inherited from, also called base class'],['child','The class that inherits, written with the parent in brackets'],['super','super gives access to the parent class'],['override','A child can replace a parent method with its own version'],['reuse','Avoids repeating code']]},
+{id:'iterators',t:'Iterators',u:'python_iterators.asp',s:'An iterator is an object that gives back items one at a time. Lists and strings are iterable, and loops use iterators behind the scenes.',p:[['iterable','An object you can loop over'],['iter','iter returns an iterator from an iterable'],['next','next returns the following item'],['stopiteration','Raised when there are no items left'],['custom','Your own class can become an iterator by defining iter and next']]},
+{id:'modules',t:'Modules',u:'python_modules.asp',s:'A module is a file of Python code you can reuse by importing it. Python ships with many built-in modules.',p:[['import','Brings a module into your program'],['alias','Use as to give a module a shorter name'],['from import','Import only specific names from a module'],['built in','Examples are math, random and datetime'],['dir','Lists the names defined inside a module']]},
+{id:'tryexcept',t:'Try Except',u:'python_try_except.asp',s:'Try and except let your program handle errors without crashing.',p:[['try','Holds the code that might fail'],['except','Runs when an error happens'],['else','Runs only when no error occurred'],['finally','Always runs, useful for cleanup'],['raise','Lets you throw an error yourself'],['specific','Catch particular errors like ValueError or ZeroDivisionError']]},
+{id:'files',t:'File Handling',u:'python_file_handling.asp',s:'The open function lets you read, write and append files. The with statement closes them for you.',p:[['open','Opens a file and takes the file name and a mode'],['modes','r reads, w overwrites, a appends and x creates a new file'],['read','read gets the contents and readline gets one line'],['write','write puts text into the file'],['with','Closes the file automatically when the block ends'],['remove','The os module can delete files']]}
+];
+const BYID=Object.fromEntries(T.map(x=>[x.id,x]));
+const INT=[1,3,7,14,30,60];
+const KEY='pydaily_v1';
+
+/* ---------- Detailed notes (original explanations and examples) ---------- */
+const r=String.raw;
+const D={
+intro:[
+["What is Python","Python is a beginner-friendly programming language created by Guido van Rossum and first released in 1991. It is used for web back ends, automation scripts, data analysis, machine learning, games and more. It runs on Windows, macOS and Linux.",""],
+["Why people like it","The syntax reads almost like English, so programs stay short. It has a large standard library plus a huge number of third-party packages. Because it is interpreted, you can write a line and run it right away, which makes experimenting fast.",""],
+["Your first program","Save this in a file called hello.py and run it from a terminal.",r`print("Hello, World!")
+
+# run it with:
+#   python hello.py`],
+["Check your version","Use Python 3. Python 2 stopped receiving updates in 2020.",r`python --version
+python3 --version`],
+["Interactive mode","Typing python on its own opens a prompt where each line runs immediately. It is great for quick tests.",r`>>> 2 + 3
+5
+>>> print("hi")
+hi
+>>> exit()`]
+],
+syntax:[
+["Indentation is part of the syntax","Other languages use curly braces to group code. Python uses indentation (usually 4 spaces). All lines in a block must be indented by the same amount, and mixing amounts causes an IndentationError.",r`if 5 > 2:
+    print("five is bigger")   # inside the if block
+print("always runs")          # outside the block
+
+# Wrong:
+# if 5 > 2:
+# print("error")`],
+["Statements and line breaks","A statement normally ends at the end of the line. For a long statement, wrap it in brackets or end the line with a backslash.",r`total = (10 +
+         20 +
+         30)
+
+name = "Asha"; age = 20     # two statements on one line (rarely used)`],
+["Case sensitivity and names","Python treats upper and lower case as different. Keywords such as if, for and def must be lower case, except True, False and None.",r`city = "Pune"
+City = "Mumbai"
+print(city, City)   # Pune Mumbai`],
+["Where Python code lives","Code can be typed in the interactive prompt, saved in a .py file, or written in a notebook. Whichever you use, the rules above stay the same.",""]
+],
+comments:[
+["Single-line comments","Everything after a hash sign on a line is ignored. You can put a comment on its own line or after code.",r`# This whole line is a comment
+price = 50   # comment after code`],
+["Multi-line comments","Python has no dedicated block-comment symbol. Either put a hash on every line or use a triple-quoted string that is not assigned to anything.",r`# line one
+# line two
+
+"""
+This is a triple quoted string.
+It is often used as a block comment.
+"""`],
+["Docstrings","A triple-quoted string placed directly under a function, class or module is its documentation. Tools and help() can read it.",r`def square(n):
+    """Return n multiplied by itself."""
+    return n * n
+
+print(square.__doc__)`],
+["Good habits","Explain why you did something, not what the code obviously does. You can also comment out a line temporarily while debugging.",""]
+],
+variables:[
+["Creating variables","A variable is created the first time you give it a value. There is no keyword to declare it, and you can later store a different type in the same name.",r`x = 5
+name = "Ravi"
+x = "now text"     # allowed: dynamic typing
+print(x, name)`],
+["Naming rules","A name may contain letters, digits and underscores. It cannot start with a digit, cannot contain spaces or dashes, and cannot be a keyword. The usual style is snake_case.",r`my_var = 1
+_private = 2
+var2 = 3
+# 2var = 4      -> error
+# my-var = 5    -> error`],
+["Assigning several at once","You can give many variables values in one line, give one value to many names, or unpack a collection.",r`a, b, c = 1, 2, 3
+x = y = z = 0
+fruits = ["apple", "banana", "cherry"]
+f1, f2, f3 = fruits`],
+["Printing variables","print can take several values separated by commas. Using plus to join text and a number causes an error, so convert first or use an f-string.",r`age = 21
+print("Age:", age)
+print("Age: " + str(age))
+print(f"Age: {age}")`],
+["Global and local variables","A variable made inside a function is local. A variable made outside is global and can be read anywhere. To change a global from inside a function, declare it with the global keyword.",r`count = 0
+
+def add():
+    global count
+    count = count + 1
+
+add()
+print(count)   # 1`],
+["Deleting and checking type","del removes a name, and type() shows the type of the value it holds.",r`x = 10
+print(type(x))   # <class 'int'>
+del x`]
+],
+datatypes:[
+["Built-in categories","Text: str. Numbers: int, float, complex. Sequences: list, tuple, range. Mapping: dict. Sets: set, frozenset. Boolean: bool. Binary: bytes, bytearray, memoryview. Nothing: NoneType.",""],
+["Examples of each","The type of a variable is set by the value you assign.",r`a = "hello"            # str
+b = 20                 # int
+c = 20.5               # float
+d = 1 + 2j             # complex
+e = [1, 2, 3]          # list
+f = (1, 2, 3)          # tuple
+g = range(5)           # range
+h = {"k": "v"}         # dict
+i = {1, 2, 3}          # set
+j = True               # bool
+k = None               # NoneType`],
+["Mutable and immutable","Mutable objects can change in place: list, dict, set. Immutable ones cannot: int, float, str, tuple, bool, frozenset. Changing an immutable value really creates a new object.",r`nums = [1, 2]
+nums.append(3)      # same list, now changed
+
+s = "abc"
+# s[0] = "x"        # error: strings cannot change`],
+["Setting a type explicitly","You can use the type name as a constructor.",r`x = str(3)       # "3"
+y = int("7")      # 7
+z = list("abc")   # ['a', 'b', 'c']`]
+],
+numbers:[
+["The three number types","int holds whole numbers of any size. float holds decimals and can use scientific notation with e. complex has an imaginary part written with j.",r`a = 10
+b = 3.14
+c = 35e3        # 35000.0
+d = 2 + 5j
+big = 10**30    # still an int
+million = 1_000_000   # underscores help reading`],
+["Converting between them","int() cuts off the decimal part and float() adds one. Complex numbers cannot be converted to int or float.",r`print(float(5))   # 5.0
+print(int(7.9))   # 7
+print(round(7.9)) # 8`],
+["Arithmetic notes","Normal division always gives a float. Use // for whole-number division and % for the remainder.",r`print(7 / 2)    # 3.5
+print(7 // 2)   # 3
+print(7 % 2)    # 1
+print(2 ** 5)   # 32`],
+["Useful functions","abs, round, min, max and pow are built in. The math module adds sqrt, ceil, floor and constants like pi.",r`import math
+print(abs(-4), min(3, 9), max(3, 9), pow(2, 3))
+print(math.sqrt(16), math.ceil(2.1), math.floor(2.9), math.pi)`],
+["Random numbers","The random module gives pseudo-random values.",r`import random
+print(random.randint(1, 10))   # whole number 1 to 10
+print(random.random())         # float from 0 to 1
+print(random.choice(["a", "b", "c"]))`]
+],
+casting:[
+["Why cast","Sometimes you have a value in one type but need another, for example text typed by a user that must be used as a number. Python does this with int(), float(), str() and friends.",""],
+["Common conversions","",r`int("12")      # 12
+int(5.99)      # 5   (cuts, does not round)
+float("3.5")   # 3.5
+float(4)       # 4.0
+str(100)       # "100"
+bool(0)        # False
+list("abc")    # ['a', 'b', 'c']
+tuple([1, 2])  # (1, 2)
+set([1, 1, 2]) # {1, 2}`],
+["Reading input","input() always returns text, so cast it before doing maths.",r`age = int(input("Age: "))
+print(age + 1)`],
+["When casting fails","Python raises a ValueError if the text cannot be converted. You can protect against it with try and except.",r`try:
+    n = int("abc")
+except ValueError:
+    print("Not a number")`],
+["Implicit conversion","In mixed int and float arithmetic Python converts the int to float on its own. It does not mix text and numbers, though.",r`print(1 + 2.5)     # 3.5
+# print("1" + 2)   # TypeError`]
+],
+strings:[
+["Creating strings","Use single or double quotes. Triple quotes allow several lines. A string is a sequence of characters.",r`a = "Hello"
+b = 'World'
+c = """Line one
+Line two"""`],
+["Indexing and slicing","Indexes start at 0, and negative indexes count from the end. A slice start:stop:step stops before the stop index.",r`s = "Python"
+print(s[0])      # P
+print(s[-1])     # n
+print(s[1:4])    # yth
+print(s[:2])     # Py
+print(s[2:])     # thon
+print(s[::-1])   # nohtyP`],
+["Length, membership, looping","",r`s = "banana"
+print(len(s))            # 6
+print("nan" in s)        # True
+print("x" not in s)      # True
+for ch in s:
+    print(ch)`],
+["Common methods","String methods return new strings because strings are immutable.",r`t = "  Hello, World  "
+print(t.strip())            # remove outer spaces
+print(t.upper(), t.lower())
+print(t.replace("World", "Python"))
+print("a,b,c".split(","))   # ['a', 'b', 'c']
+print("-".join(["a", "b"])) # a-b
+print("hello".capitalize(), "hello world".title())
+print("hello".find("l"), "hello".count("l"))
+print("hello".startswith("he"), "hello".endswith("lo"))
+print("123".isdigit(), "abc".isalpha())`],
+["Joining and formatting","Use plus to join strings. For mixing in values, f-strings are the clearest option, and you can format numbers inside the braces.",r`name = "Asha"
+score = 91.256
+print(f"{name} scored {score:.1f}")
+print(f"{1000000:,}")
+print("{} is {} years".format("Ravi", 20))`],
+["Escape characters","A backslash lets you include characters that are hard to type. A raw string (r before the quote) ignores escapes.",r`print("She said \"hi\"")
+print("Line1\nLine2")
+print("Tab\there")
+print("C:\\folder")
+print(r"C:\new\text")`],
+["Strings cannot change in place","",r`s = "cat"
+# s[0] = "b"        # TypeError
+s = "b" + s[1:]     # build a new string
+print(s)            # bat`]
+],
+booleans:[
+["True and False","A boolean has only two values, written True and False with capital first letters. Comparisons return booleans.",r`print(10 > 9)    # True
+print(10 == 9)   # False
+print(10 < 9)    # False`],
+["bool() and truthiness","bool() tells how a value is treated in a condition. Almost everything is True. These are False: 0, 0.0, empty text, empty list, tuple, set, dict, None and False.",r`print(bool("hello"))   # True
+print(bool(15))        # True
+print(bool(0))         # False
+print(bool(""))        # False
+print(bool([]))        # False
+print(bool(None))      # False`],
+["Booleans in conditions","Because of truthiness you can test a collection directly.",r`items = []
+if not items:
+    print("list is empty")`],
+["Functions that return booleans","Many built-ins answer yes or no, for example isinstance and the string checks.",r`print(isinstance(5, int))     # True
+print("abc".isalpha())        # True`],
+["Booleans are numbers too","True behaves like 1 and False like 0, so you can add them. That is handy for counting matches.",r`print(True + True)        # 2
+print(sum([True, False, True]))   # 2`]
+],
+operators:[
+["Arithmetic","",r`print(7 + 2, 7 - 2, 7 * 2)
+print(7 / 2)    # 3.5  true division
+print(7 // 2)   # 3    floor division
+print(7 % 2)    # 1    remainder
+print(2 ** 3)   # 8    power`],
+["Assignment","Shorthand operators update a variable using its own value.",r`x = 5
+x += 3    # 8
+x -= 1    # 7
+x *= 2    # 14
+x //= 4   # 3
+x **= 2   # 9`],
+["Comparison","They return True or False.",r`print(5 == 5, 5 != 4, 5 > 3, 5 < 3, 5 >= 5, 5 <= 4)
+print(1 < 5 < 10)    # chained comparison: True`],
+["Logical","and is true only if both sides are true, or if either is true, not flips the result.",r`x = 7
+print(x > 5 and x < 10)   # True
+print(x < 5 or x > 6)     # True
+print(not (x > 5))        # False`],
+["Identity and membership","is checks whether two names point to the very same object, while == checks whether the values are equal. in checks if a value is in a sequence.",r`a = [1, 2]
+b = [1, 2]
+print(a == b)    # True  same values
+print(a is b)    # False different objects
+print(2 in a)    # True
+print(5 not in a) # True`],
+["Bitwise operators","These work on the binary form of integers.",r`print(6 & 3)    # 2  AND
+print(6 | 3)    # 7  OR
+print(6 ^ 3)    # 5  XOR
+print(~6)       # -7 NOT
+print(6 << 1)   # 12 shift left
+print(6 >> 1)   # 3  shift right`],
+["Precedence","Exponent comes first, then multiply and divide, then add and subtract, then comparisons, then not, and, or. Brackets override everything, so use them when unsure.",r`print(2 + 3 * 4)     # 14
+print((2 + 3) * 4)   # 20`]
+],
+lists:[
+["Creating and reading","A list keeps items in order inside square brackets. Items can be of different types and can repeat.",r`fruits = ["apple", "banana", "cherry", "apple"]
+print(fruits[0])     # apple
+print(fruits[-1])    # apple (last)
+print(fruits[1:3])   # ['banana', 'cherry']
+print(len(fruits))   # 4
+print("banana" in fruits)`],
+["Changing items","",r`fruits = ["apple", "banana", "cherry"]
+fruits[1] = "mango"
+fruits[0:2] = ["kiwi", "lime", "plum"]   # replace a slice`],
+["Adding items","",r`nums = [1, 2]
+nums.append(3)          # [1, 2, 3]
+nums.insert(0, 0)       # [0, 1, 2, 3]
+nums.extend([4, 5])     # [0, 1, 2, 3, 4, 5]`],
+["Removing items","",r`nums = [10, 20, 30, 20]
+nums.remove(20)    # removes first 20
+last = nums.pop()  # removes and returns the last
+nums.pop(0)        # removes by index
+del nums[0]        # also by index
+nums.clear()       # empties the list`],
+["Looping","",r`for f in ["a", "b"]:
+    print(f)
+
+for i in range(len(nums)):
+    print(i, nums[i])
+
+for i, v in enumerate(["a", "b"]):
+    print(i, v)`],
+["List comprehension","A compact way to build a list, with an optional condition.",r`squares = [n * n for n in range(5)]            # [0, 1, 4, 9, 16]
+evens = [n for n in range(10) if n % 2 == 0]   # [0, 2, 4, 6, 8]`],
+["Sorting and reversing","sort() changes the list, while sorted() returns a new one.",r`nums = [5, 2, 9, 1]
+nums.sort()                 # [1, 2, 5, 9]
+nums.sort(reverse=True)     # [9, 5, 2, 1]
+words = ["pear", "fig", "banana"]
+words.sort(key=len)         # shortest first
+print(sorted(nums))
+nums.reverse()`],
+["Copying and joining","Assigning b = a does not copy, it makes two names for one list. Use copy() or a slice to make a real copy.",r`a = [1, 2, 3]
+b = a.copy()       # independent copy
+c = a + [4, 5]     # join lists
+a.count(2)         # how many times 2 appears
+a.index(3)         # position of first 3`],
+["Nested lists","",r`grid = [[1, 2, 3], [4, 5, 6]]
+print(grid[1][2])   # 6`]
+],
+tuples:[
+["Creating tuples","A tuple is an ordered collection in round brackets. Once created it cannot be changed. A tuple with one item needs a trailing comma.",r`t = ("a", "b", "c")
+single = ("x",)       # the comma matters
+print(t[0], t[-1], t[1:])
+print(len(t))`],
+["Why use them","Tuples are slightly faster than lists, protect data from accidental changes, and can be used as dictionary keys.",""],
+["Changing a tuple indirectly","Convert to a list, change it, and convert back.",r`t = (1, 2, 3)
+tmp = list(t)
+tmp.append(4)
+t = tuple(tmp)
+print(t)   # (1, 2, 3, 4)`],
+["Unpacking","",r`point = (3, 4)
+x, y = point
+
+first, *rest = (1, 2, 3, 4)
+print(first, rest)     # 1 [2, 3, 4]`],
+["Looping, joining, methods","",r`t = (1, 2, 2, 3)
+for item in t:
+    print(item)
+print(t + (4, 5))
+print(t * 2)
+print(t.count(2), t.index(3))`]
+],
+sets:[
+["Creating sets","A set is an unordered group of unique items in curly braces. Because there is no order, you cannot use an index. Items must be immutable, so a list cannot be in a set. An empty set must be made with set(), since {} is an empty dictionary.",r`s = {"a", "b", "a"}
+print(s)          # {'a', 'b'}
+empty = set()
+unique = set([1, 1, 2, 3, 3])   # remove duplicates from a list`],
+["Adding and removing","",r`s = {1, 2}
+s.add(3)
+s.update([4, 5])
+s.remove(2)      # error if missing
+s.discard(99)    # no error if missing
+s.pop()          # removes an arbitrary item
+s.clear()`],
+["Set operations","",r`a = {1, 2, 3}
+b = {3, 4, 5}
+print(a | b)   # union: {1, 2, 3, 4, 5}
+print(a & b)   # intersection: {3}
+print(a - b)   # difference: {1, 2}
+print(a ^ b)   # symmetric difference: {1, 2, 4, 5}`],
+["Testing relationships","",r`print({1, 2} <= {1, 2, 3})    # subset: True
+print({1, 2, 3} >= {1})       # superset: True
+print({1, 2}.isdisjoint({3})) # no shared items: True
+print(2 in {1, 2, 3})`],
+["frozenset","An immutable version of a set.",r`fs = frozenset([1, 2, 3])
+# fs.add(4)   # error`]
+],
+dictionaries:[
+["Creating and reading","A dictionary stores key and value pairs. Each key is unique and keys must be immutable.",r`car = {"brand": "Ford", "year": 1964}
+print(car["brand"])
+print(car.get("color"))             # None, no error
+print(car.get("color", "unknown"))  # default value
+print(len(car))`],
+["Changing and adding","Assigning to an existing key updates it, and assigning to a new key adds it.",r`car["year"] = 2020
+car["color"] = "red"
+car.update({"year": 2021, "owner": "Asha"})`],
+["Removing","",r`car.pop("color")
+car.popitem()       # removes the last inserted pair
+del car["year"]
+car.clear()`],
+["Looping","",r`d = {"a": 1, "b": 2}
+for k in d:
+    print(k, d[k])
+for v in d.values():
+    print(v)
+for k, v in d.items():
+    print(k, v)`],
+["Keys, values and items","",r`print(list(d.keys()))     # ['a', 'b']
+print(list(d.values()))   # [1, 2]
+print(list(d.items()))    # [('a', 1), ('b', 2)]
+print("a" in d)           # checks keys`],
+["Copying, merging, nesting","",r`copy = d.copy()
+merged = {**d, "c": 3}        # or d | {"c": 3} in Python 3.9+
+family = {"child1": {"name": "Ria"}, "child2": {"name": "Sam"}}
+print(family["child1"]["name"])
+d.setdefault("z", 0)          # add only if key is missing`],
+["Dictionary comprehension","",r`squares = {n: n * n for n in range(4)}   # {0: 0, 1: 1, 2: 4, 3: 9}`]
+],
+ifelse:[
+["if, elif, else","Python runs the first block whose condition is true and skips the rest. Remember the colon and the indentation.",r`marks = 72
+if marks >= 90:
+    print("A")
+elif marks >= 60:
+    print("B")
+else:
+    print("C")`],
+["Combining conditions","",r`age = 25
+if age >= 18 and age < 60:
+    print("adult")
+if not age < 18:
+    print("not a minor")`],
+["Nested if","",r`x = 41
+if x > 10:
+    print("above ten")
+    if x > 20:
+        print("and also above twenty")`],
+["One-line forms","",r`if 5 > 2: print("yes")
+status = "pass" if marks >= 40 else "fail"   # conditional expression`],
+["pass","An empty block is not allowed, so use pass as a placeholder.",r`if marks > 50:
+    pass`],
+["match statement (Python 3.10+)","A cleaner way to compare one value against many patterns.",r`day = 3
+match day:
+    case 1:
+        print("Mon")
+    case 2:
+        print("Tue")
+    case _:
+        print("Other")`]
+],
+while:[
+["Basic while loop","The condition is checked before every pass. Make sure the loop body changes something so the condition eventually becomes false.",r`i = 1
+while i <= 3:
+    print(i)
+    i += 1`],
+["break and continue","break leaves the loop. continue jumps to the next check.",r`i = 0
+while i < 10:
+    i += 1
+    if i == 3:
+        continue
+    if i == 6:
+        break
+    print(i)    # 1 2 4 5`],
+["else on a loop","The else block runs when the condition becomes false, but not if the loop ended with break.",r`i = 1
+while i < 3:
+    print(i)
+    i += 1
+else:
+    print("finished normally")`],
+["Common pattern: repeat until valid","",r`while True:
+    pw = input("Password: ")
+    if len(pw) >= 6:
+        break
+    print("Too short")`],
+["Danger","If the condition never turns false you get an infinite loop. Press Ctrl+C to stop one in a terminal.",""]
+],
+for:[
+["Looping over a sequence","",r`for color in ["red", "green"]:
+    print(color)
+
+for ch in "hey":
+    print(ch)`],
+["range()","range(stop), range(start, stop) and range(start, stop, step) produce numbers, stopping before stop.",r`for i in range(3):        # 0 1 2
+    print(i)
+for i in range(2, 6):     # 2 3 4 5
+    print(i)
+for i in range(10, 0, -3):   # 10 7 4 1
+    print(i)`],
+["break, continue, else","",r`for n in range(10):
+    if n == 3:
+        continue
+    if n == 6:
+        break
+    print(n)
+else:
+    print("only runs if no break")`],
+["Nested loops","",r`for i in range(1, 4):
+    for j in range(1, 4):
+        print(i * j, end=" ")
+    print()`],
+["Handy helpers","enumerate gives index and value, zip walks two lists together.",r`names = ["a", "b"]
+ages = [20, 30]
+for i, n in enumerate(names, start=1):
+    print(i, n)
+for n, a in zip(names, ages):
+    print(n, a)`],
+["pass","",r`for x in [1, 2]:
+    pass   # needed because an empty loop body is not allowed`]
+],
+functions:[
+["Defining and calling","def starts a function. Nothing runs until you call it by name with brackets.",r`def greet():
+    print("Hello!")
+
+greet()`],
+["Parameters and arguments","Parameters are the names in the definition. Arguments are the values you pass when calling.",r`def add(a, b):
+    return a + b
+
+print(add(2, 3))          # positional
+print(add(b=5, a=1))      # keyword arguments`],
+["Default values","",r`def power(base, exp=2):
+    return base ** exp
+
+print(power(4))      # 16
+print(power(2, 5))   # 32`],
+["Any number of arguments","*args collects extra positional values into a tuple. **kwargs collects extra keyword values into a dictionary.",r`def total(*args):
+    return sum(args)
+
+def show(**kwargs):
+    for k, v in kwargs.items():
+        print(k, v)
+
+print(total(1, 2, 3))
+show(name="Asha", age=20)`],
+["Return values","A function without return gives back None. You can return several values, which arrive as a tuple.",r`def min_max(nums):
+    return min(nums), max(nums)
+
+lo, hi = min_max([4, 1, 9])`],
+["Scope","Variables created inside a function are local. nonlocal changes a variable in the enclosing function.",r`def outer():
+    n = 0
+    def inner():
+        nonlocal n
+        n += 1
+    inner()
+    return n`],
+["Recursion","A function that calls itself needs a base case to stop.",r`def factorial(n):
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+
+print(factorial(5))   # 120`],
+["Docstrings and type hints","Hints document the expected types but are not enforced.",r`def area(w: float, h: float) -> float:
+    """Return the area of a rectangle."""
+    return w * h`]
+],
+lambda:[
+["Syntax","lambda arguments: expression. It returns the value of the single expression automatically.",r`square = lambda x: x * x
+print(square(5))         # 25
+add = lambda a, b: a + b
+print(add(2, 3))         # 5`],
+["Where lambdas shine","They are handy as short throwaway functions given to sorted, map and filter.",r`people = [("Asha", 30), ("Ravi", 22), ("Meena", 27)]
+people.sort(key=lambda p: p[1])        # sort by age
+
+nums = [1, 2, 3, 4]
+print(list(map(lambda n: n * 2, nums)))        # [2, 4, 6, 8]
+print(list(filter(lambda n: n % 2 == 0, nums)))# [2, 4]`],
+["A function that makes functions","",r`def multiplier(n):
+    return lambda x: x * n
+
+double = multiplier(2)
+print(double(8))   # 16`],
+["Limits","A lambda can contain only one expression, no statements and no assignments. For anything longer, write a normal def.",""]
+],
+classes:[
+["Class and object","A class is a blueprint and an object is one thing built from it. Each object has its own data.",r`class Dog:
+    pass
+
+d = Dog()
+print(type(d))`],
+["__init__ and self","__init__ runs automatically when an object is created, to set up its data. self is the object itself and must be the first parameter of every method.",r`class Dog:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def bark(self):
+        print(self.name + " says woof")
+
+d = Dog("Tommy", 3)
+d.bark()
+print(d.age)`],
+["Changing and deleting","",r`d.age = 4
+del d.age
+del d`],
+["__str__","Controls what print shows for the object.",r`class Dog:
+    def __init__(self, name):
+        self.name = name
+    def __str__(self):
+        return f"Dog({self.name})"
+
+print(Dog("Tommy"))`],
+["Class attributes vs instance attributes","A class attribute is shared by all objects. An instance attribute belongs to one object.",r`class Dog:
+    species = "canine"          # shared
+    def __init__(self, name):
+        self.name = name        # per object`],
+["A small realistic example","",r`class Account:
+    def __init__(self, balance=0):
+        self.balance = balance
+
+    def deposit(self, amt):
+        self.balance += amt
+
+    def withdraw(self, amt):
+        if amt > self.balance:
+            raise ValueError("Not enough money")
+        self.balance -= amt
+
+a = Account(100)
+a.deposit(50)
+print(a.balance)   # 150`],
+["Properties and static methods","@property lets a method be read like an attribute. @staticmethod does not need self.",r`class Circle:
+    def __init__(self, r):
+        self.r = r
+    @property
+    def area(self):
+        return 3.14159 * self.r ** 2
+    @staticmethod
+    def unit():
+        return 1
+
+print(Circle(2).area)`]
+],
+inheritance:[
+["Parent and child","A child class takes everything from its parent and can add or change things. Put the parent in brackets.",r`class Animal:
+    def __init__(self, name):
+        self.name = name
+    def speak(self):
+        print("...")
+
+class Dog(Animal):
+    pass
+
+d = Dog("Tommy")
+d.speak()`],
+["super()","Use super() to run the parent's code, usually inside __init__.",r`class Dog(Animal):
+    def __init__(self, name, breed):
+        super().__init__(name)
+        self.breed = breed`],
+["Overriding","A child can redefine a method to behave differently. This idea is called polymorphism.",r`class Dog(Animal):
+    def speak(self):
+        print("Woof")
+
+class Cat(Animal):
+    def speak(self):
+        print("Meow")
+
+for a in [Dog("d"), Cat("c")]:
+    a.speak()`],
+["Checking relationships","",r`d = Dog("Tommy", "Lab")
+print(isinstance(d, Animal))      # True
+print(issubclass(Dog, Animal))    # True`],
+["Multiple inheritance","A class may have more than one parent. Python decides the search order with the method resolution order.",r`class A: pass
+class B: pass
+class C(A, B): pass
+print(C.__mro__)`]
+],
+iterators:[
+["Iterable and iterator","An iterable (list, string, tuple, dict, set) can give you an iterator. An iterator remembers its position and hands out one item per next() call.",r`nums = [10, 20, 30]
+it = iter(nums)
+print(next(it))   # 10
+print(next(it))   # 20
+print(next(it))   # 30
+# next(it) now raises StopIteration`],
+["What a for loop really does","A for loop calls iter() once and then next() repeatedly until StopIteration appears.",r`for n in [1, 2, 3]:
+    print(n)`],
+["Making your own iterator","Define __iter__ (returns the iterator) and __next__ (returns the next value or raises StopIteration).",r`class Countdown:
+    def __init__(self, start):
+        self.n = start
+    def __iter__(self):
+        return self
+    def __next__(self):
+        if self.n <= 0:
+            raise StopIteration
+        self.n -= 1
+        return self.n + 1
+
+for x in Countdown(3):
+    print(x)    # 3 2 1`],
+["Generators (a shortcut)","A function with yield becomes a generator, which builds an iterator for you and produces values lazily.",r`def countdown(n):
+    while n > 0:
+        yield n
+        n -= 1
+
+print(list(countdown(3)))   # [3, 2, 1]`]
+],
+modules:[
+["What a module is","Any .py file is a module. Importing it lets you reuse its functions and variables.",r`# mymodule.py
+def greet(name):
+    return "Hello, " + name
+
+# main.py
+import mymodule
+print(mymodule.greet("Asha"))`],
+["Import styles","",r`import math                    # use math.sqrt(4)
+import math as m                # alias: m.sqrt(4)
+from math import sqrt, pi       # use sqrt(4) directly
+from math import *              # everything (avoid in real code)`],
+["Useful built-in modules","",r`import math, random, datetime, os, sys, json
+
+print(datetime.datetime.now())
+print(os.getcwd())
+print(sys.version)
+print(json.dumps({"a": 1}))`],
+["dir() and help()","dir lists the names inside a module, help shows documentation.",r`import math
+print(dir(math))
+help(math.sqrt)`],
+["if __name__ == main","This block runs only when the file is executed directly, not when it is imported.",r`def main():
+    print("running")
+
+if __name__ == "__main__":
+    main()`],
+["Installing other packages","pip installs third-party packages. A virtual environment keeps each project's packages separate.",r`pip install requests
+python -m venv venv`]
+],
+tryexcept:[
+["Basic try and except","Code in try runs normally. If an error occurs, Python jumps to the matching except block instead of crashing.",r`try:
+    print(10 / 0)
+except ZeroDivisionError:
+    print("Cannot divide by zero")`],
+["Several except blocks","Catch specific errors first. as e gives you the error object.",r`try:
+    n = int(input("Number: "))
+    print(10 / n)
+except ValueError:
+    print("Please type a number")
+except ZeroDivisionError:
+    print("Zero is not allowed")
+except Exception as e:
+    print("Something else went wrong:", e)`],
+["else and finally","else runs if no error happened. finally runs every time, which is good for cleanup such as closing a file.",r`try:
+    f = open("data.txt")
+except FileNotFoundError:
+    print("missing file")
+else:
+    print(f.read())
+    f.close()
+finally:
+    print("done")`],
+["Raising errors","You can raise an error yourself when something is wrong.",r`def set_age(age):
+    if age < 0:
+        raise ValueError("Age cannot be negative")
+    return age`],
+["Custom exceptions","",r`class LowBalance(Exception):
+    pass
+
+raise LowBalance("Add money")`],
+["Common exception types","ValueError (right type, wrong value), TypeError (wrong type), IndexError (list index out of range), KeyError (missing dictionary key), NameError (unknown variable), ZeroDivisionError, FileNotFoundError, ImportError.",""]
+],
+files:[
+["Opening a file","open(name, mode) returns a file object. The default mode is r for reading text.",r`f = open("notes.txt")
+print(f.read())
+f.close()`],
+["Modes","r read (error if missing). w write (creates, erases old content). a append (creates, adds to the end). x create (error if it exists). Add b for binary, for example rb.",""],
+["Reading in different ways","",r`with open("notes.txt") as f:
+    print(f.read(5))        # first 5 characters
+    f.seek(0)               # go back to the start
+    print(f.readline())     # one line
+    for line in f:          # remaining lines
+        print(line.strip())`],
+["Writing and appending","",r`with open("out.txt", "w") as f:
+    f.write("first line\n")
+    f.writelines(["a\n", "b\n"])
+
+with open("out.txt", "a") as f:
+    f.write("added later\n")`],
+["Why use with","with closes the file automatically, even if an error happens in the middle.",""],
+["Checking and deleting","",r`import os
+if os.path.exists("out.txt"):
+    os.remove("out.txt")
+os.makedirs("data", exist_ok=True)`],
+["Other file types","The json module reads and writes JSON and the csv module handles spreadsheets.",r`import json
+with open("data.json", "w") as f:
+    json.dump({"name": "Asha"}, f)
+with open("data.json") as f:
+    print(json.load(f))`]
+]
+};
+/* extra key points so the voice check covers more of each topic */
+const X={
+intro:[['guido','Created by Guido van Rossum and released in 1991'],['python three','Python 3 is the current version, Python 2 is retired']],
+syntax:[['indentationerror','Inconsistent indentation causes an IndentationError']],
+comments:[['docstring','A triple quoted string under a function that documents it']],
+variables:[['snake case','Common naming style with lowercase words joined by underscores'],['local','A variable created inside a function exists only there']],
+datatypes:[['mutable','Lists, dicts and sets can change in place, while strings and tuples cannot']],
+numbers:[['scientific','Floats can use e notation for powers of ten'],['division','Normal division always gives a float']],
+casting:[['implicit','Python converts int to float automatically in mixed arithmetic'],['input','The input function always returns text']],
+strings:[['negative index','Negative indexes count from the end of the string'],['join','join combines a list of strings using a separator']],
+booleans:[['isinstance','isinstance checks whether a value is of a given type']],
+operators:[['bitwise','Operators that work on the binary digits of integers'],['precedence','The order in which operators are evaluated']],
+lists:[['extend','extend adds all items of another list'],['copy','Use copy to get an independent list, assignment only creates another name']],
+tuples:[['hashable','Tuples can be dictionary keys because they cannot change']],
+sets:[['symmetric difference','Items in either set but not in both'],['frozenset','An immutable version of a set']],
+dictionaries:[['setdefault','Adds a key with a default value only if it is missing'],['nested','A dictionary can hold other dictionaries']],
+ifelse:[['match','The match statement compares a value against several patterns']],
+while:[['input loop','While true with a break is a common way to repeat until valid input']],
+for:[['enumerate','Gives both the index and the value while looping'],['zip','Walks through two sequences together']],
+functions:[['scope','Local variables live inside the function, global ones outside'],['keyword arguments','Arguments passed with the name so order does not matter'],['docstring','A string under the def line describing the function']],
+lambda:[['sorted key','A lambda is commonly used as the key to sort by'],['one expression','Only a single expression is allowed']],
+classes:[['str','The str method controls how an object is printed'],['class attribute','Shared by all objects, unlike instance attributes'],['property','A decorator that lets a method be used like an attribute']],
+inheritance:[['polymorphism','Different classes can respond to the same method name in their own way'],['multiple inheritance','A class can inherit from more than one parent']],
+iterators:[['generator','A function using yield that produces values one at a time'],['for loop','A for loop calls iter once and next repeatedly']],
+modules:[['name main','The main check runs code only when the file is executed directly'],['pip','The tool that installs third party packages'],['virtual environment','Keeps each project packages separate']],
+tryexcept:[['exception','Common ones are ValueError, TypeError, IndexError and KeyError'],['custom exception','You can create your own error class']],
+files:[['seek','Moves the reading position in the file'],['append mode','Mode a adds to the end without erasing'],['json','The json module reads and writes JSON files']]
+};
+T.forEach(x=>(X[x.id]||[]).forEach(e=>x.p.push(e)));
+function detail(id){const d=D[id]||[];return d.length?`<div class="card"><h3>Detailed notes</h3>${d.map(([h,t,c])=>`<h4>${esc(h)}</h4>${t?`<p>${esc(t)}</p>`:''}${c?`<pre><code>${esc(c)}</code></pre>`:''}`).join('')}</div>`:''}
+
+/* ---------- Extra topics that mirror the W3Schools sidebar (notes are original) ---------- */
+const N=(id,t,u,s,p)=>({id,t,u,s,p});
+const NEW=[
+N('start','Get Started','python_getstarted.asp','To start, install Python 3, confirm it works from a terminal, then run code either in the interactive prompt or from saved .py files.',[['install','Download Python 3 from python.org and on Windows tick the option that adds it to PATH'],['version','python --version shows which version is installed'],['prompt','The interactive prompt runs one line at a time'],['script','Save code in a .py file and run it with python and the file name'],['editor','VS Code, PyCharm or IDLE make writing code easier']]),
+N('output','Output','python_output.asp','The print function sends text to the screen. It can take many values, a separator, a custom ending, and even write to a file.',[['print','Shows values on the screen'],['separator','The sep argument sets what goes between values'],['end','The end argument replaces the new line at the end'],['f string','Lets you place variables directly inside text'],['file','print can write into a file using the file argument']]),
+N('match','Match','python_match.asp','The match statement (Python 3.10 and newer) compares a value against several patterns and runs the first one that fits. It is a neater alternative to long if-elif chains.',[['match','Starts the statement and names the value to test'],['case','Each case is one pattern to compare with'],['wildcard','An underscore case catches everything that did not match'],['or pattern','A vertical bar lets one case accept several values'],['guard','An if after a pattern adds an extra condition']]),
+N('range','Range','python_range.asp','range produces a sequence of numbers without building a big list in memory. It is used mostly in for loops.',[['range','Creates a sequence of integers'],['stop','The end value is never included'],['step','The third value sets the gap, and a negative step counts down'],['lazy','Numbers are produced only when needed'],['list','Wrap in list to see all the numbers at once']]),
+N('arrays','Arrays','python_arrays.asp','Python has no built-in array type. Lists play that role for most work, the array module stores one type compactly, and NumPy handles large numeric arrays.',[['list','The everyday replacement for arrays'],['array module','Stores values of a single type in a compact way'],['typecode','A letter such as i for integers tells the array module the type'],['numpy','The library for fast numeric arrays'],['index','Items are reached by position starting at zero']]),
+N('dates','Dates','python_datetime.asp','The datetime module handles dates and times: getting now, building a date, formatting it as text, reading text into a date, and doing date arithmetic.',[['datetime','The module and class that hold date and time values'],['now','Gives the current date and time'],['strftime','Formats a date into text using codes like %Y and %m'],['strptime','Reads text into a date using the same codes'],['timedelta','Represents a length of time you can add or subtract']]),
+N('math','Math','python_math.asp','Python has built-in functions for simple maths and a math module for square roots, rounding up and down, logs, trigonometry and constants.',[['abs','Absolute value of a number'],['round','Rounds to the nearest value'],['sqrt','Square root from the math module'],['ceil floor','Round up and round down'],['pi','The constant 3.14159 and more digits']]),
+N('json','JSON','python_json.asp','JSON is a text format for exchanging data. The json module turns Python dictionaries and lists into JSON text and back.',[['json','A text format for data made of objects and arrays'],['dumps','Converts a Python object into a JSON string'],['loads','Converts a JSON string into a Python object'],['dump load','The file versions that write and read JSON files'],['indent','Makes the output easy to read']]),
+N('regex','RegEx','python_regex.asp','A regular expression is a pattern for searching and editing text. The re module provides search, findall, split and sub.',[['pattern','A description of the text you want to find'],['search','Finds the first match anywhere in the text'],['findall','Returns a list of all matches'],['sub','Replaces matches with other text'],['group','Brackets capture parts of a match'],['raw string','Write patterns with an r before the quotes']]),
+N('pip','PIP','python_pip.asp','pip is the package manager that installs libraries from the Python Package Index so you can import them.',[['package','A bundle of ready-made code'],['install','pip install name downloads and installs it'],['uninstall','Removes a package'],['freeze','Lists installed packages with versions'],['requirements','A text file that lists the packages a project needs']]),
+N('strfmt','String Formatting','python_string_formatting.asp','Python offers several ways to put values into text: f-strings, the format method and the older percent style. F-strings are the modern favourite.',[['f string','An f before the quotes with variables in curly braces'],['format','The format method fills curly brace slots'],['placeholder','A curly brace slot that receives a value'],['precision','A format such as .2f sets decimal places'],['alignment','Symbols for left, right and centre inside a width']]),
+N('none','None','python_none.asp','None is a special value that means nothing is here. It is its own type, and you check for it with is.',[['none','The value that represents no value'],['is none','Use is None instead of equals'],['default','Functions that do not return anything give back None'],['falsy','None counts as false in conditions'],['mutable default','Never use an empty list as a default argument']]),
+N('userinput','User Input','python_user_input.asp','The input function pauses the program, reads a line the user types and returns it as text, so you usually cast it to a number.',[['input','Reads a line typed by the user'],['text','The result is always a string'],['cast','Convert with int or float when you need a number'],['validate','Repeat the question until the answer is acceptable'],['split','Breaks one line of input into several values']]),
+N('venv','VirtualEnv','python_virtualenv.asp','A virtual environment is an isolated folder with its own Python and packages, so projects do not disturb each other.',[['virtual environment','A separate space of packages for one project'],['venv','The built-in module that creates it'],['activate','Switches your terminal to use that environment'],['deactivate','Leaves the environment'],['isolation','Different projects can use different package versions']]),
+N('oop','OOP','python_oop.asp','Object-oriented programming organises code around objects that combine data and behaviour. Its main ideas are encapsulation, abstraction, inheritance and polymorphism.',[['class','A blueprint for objects'],['object','A single instance of a class'],['encapsulation','Keeping data and the code that uses it together and controlling access'],['abstraction','Showing only what is needed and hiding the details'],['inheritance','A class reusing another class'],['polymorphism','Same method name, different behaviour']]),
+N('classprops','Class Properties','python_classes.asp','Properties (attributes) store the data of an object. Instance properties belong to one object and class properties are shared by all of them.',[['instance property','Created in init through self and unique to each object'],['class property','Defined in the class body and shared'],['modify','Change by assigning to the attribute'],['delete','Remove with del'],['getattr','Reads an attribute using its name as text'],['hasattr','Checks whether an attribute exists']]),
+N('classmethods','Class Methods','python_classes.asp','Methods are functions inside a class. Instance methods use self, class methods use cls and the classmethod decorator, and static methods use neither.',[['instance method','Works with one object through self'],['classmethod','Receives the class itself as cls'],['staticmethod','A plain function placed inside a class'],['alternative constructor','A class method that builds an object in another way'],['self','Refers to the current object']]),
+N('magic','Magic Methods','python_classes.asp','Magic or dunder methods have double underscores on both sides. Python calls them for you to give your objects built-in behaviour such as printing, adding, comparing and measuring length.',[['dunder','Short for double underscore methods'],['str','Controls the friendly text from print'],['repr','Gives a developer-friendly description'],['len','Lets len work on your object'],['add','Defines what the plus sign does'],['eq','Defines what equals does']]),
+N('polymorphism','Polymorphism','python_polymorphism.asp','Polymorphism means one name, many forms. Different classes can offer the same method, and the code using them does not care which one it has.',[['polymorphism','Many forms behind one method name'],['override','A child gives its own version of a parent method'],['duck typing','If it has the needed methods it can be used, whatever its class'],['abstract','A base class can require children to implement methods'],['operator overloading','Giving operators meaning for your own classes']]),
+N('encapsulation','Encapsulation','python_encapsulation.asp','Encapsulation hides internal details and protects data. Python relies on naming conventions: one underscore means protected and two underscores trigger name mangling for private.',[['public','No underscore, usable anywhere'],['protected','One underscore is a hint to keep it internal'],['private','Two leading underscores change the name to make access harder'],['getter setter','Methods that read and safely change a value'],['property','Decorator that makes getters and setters look like attributes']]),
+N('inner','Inner Classes','python_inheritance.asp','An inner class is a class defined inside another class. It groups helper classes with the one that uses them.',[['inner class','A class defined inside another class'],['outer','The class that contains it'],['access','Create it through the outer class name'],['grouping','Keeps related classes together'],['nested','Also called a nested class']]),
+N('readfiles','Read Files','python_file_open.asp','Files are read with open and read methods. read takes everything, readline one line, readlines all lines, and looping over the file goes line by line.',[['read','Gets the whole content or a number of characters'],['readline','Gets one line at a time'],['readlines','Returns a list of all lines'],['loop','Iterating over the file is memory friendly'],['encoding','Pass utf-8 when reading text with special characters'],['filenotfound','Error raised when the file does not exist']]),
+N('writefiles','Write/Create Files','python_file_write.asp','Use mode w to overwrite or create, a to add to the end, and x to create only if the file does not exist yet.',[['write mode','w erases existing content first'],['append mode','a adds new text to the end'],['create mode','x fails if the file already exists'],['writelines','Writes a list of strings'],['newline','write does not add line breaks for you'],['with','Closes the file automatically']]),
+N('deletefiles','Delete Files','python_file_remove.asp','Files are deleted with os.remove and empty folders with os.rmdir. Always check that something exists before removing it.',[['remove','os.remove deletes a file'],['exists','os.path.exists checks before deleting'],['rmdir','Deletes an empty folder'],['rmtree','shutil.rmtree deletes a folder with its contents'],['permanent','Deleted files do not go to the recycle bin']]),
+N('numpy','NumPy Tutorial','numpy/numpy_intro.asp','NumPy provides the ndarray, a fast multi-dimensional array, plus vectorised maths, broadcasting and many functions for numeric work.',[['ndarray','NumPy array object that holds items of one type'],['shape','Tuple giving the size of each dimension'],['vectorized','Operations apply to every element without a loop'],['broadcasting','Arrays of different shapes can be combined by stretching the smaller one'],['reshape','Changes the dimensions without changing the data'],['slicing','Works on each axis, like lists but with commas']]),
+N('pandas','Pandas Tutorial','pandas/pandas_intro.asp','Pandas works with tables of data. A Series is one labelled column, and a DataFrame is a whole table. It reads files, cleans data, filters, groups and summarises.',[['series','A single labelled column of data'],['dataframe','A table with rows and columns'],['read csv','Loads a CSV file into a DataFrame'],['loc iloc','Select by label or by position'],['groupby','Splits data into groups and applies a summary'],['missing','dropna removes and fillna replaces empty values']]),
+N('scipy','SciPy Tutorial','scipy/scipy_intro.asp','SciPy builds on NumPy and offers scientific tools such as optimisation, integration, interpolation, statistics, linear algebra and sparse matrices.',[['scipy','Library for scientific computing built on NumPy'],['optimize','Finds minimums and roots'],['integrate','Calculates integrals'],['stats','Statistical distributions and tests'],['sparse','Efficient storage for matrices that are mostly zeros']]),
+N('django','Django Tutorial','','Django is a full-featured web framework. It follows the model-template-view pattern and ships with an ORM, an admin site, forms and authentication.',[['django','A Python web framework'],['project','The whole site configuration'],['app','A self-contained feature inside a project'],['model','Python class that describes a database table'],['view','Function that handles a request and returns a response'],['template','HTML file with placeholders'],['migration','Applies model changes to the database']]),
+N('mpl_basics','Matplotlib Basics','matplotlib_intro.asp','Matplotlib draws charts. The pyplot module offers plot for lines, plus markers, line styles, labels, a title, a grid and subplots to show several charts together.',[['pyplot','The module you import as plt'],['plot','Draws lines or points'],['marker','A symbol on each data point'],['labels','xlabel, ylabel and title describe the chart'],['grid','Adds helper grid lines'],['subplot','Places several charts in one figure'],['savefig','Saves the figure as an image']]),
+N('mpl_charts','Matplotlib Charts','matplotlib_scatter.asp','Besides line plots, Matplotlib can draw scatter plots for relationships, bar charts for comparisons, histograms for distributions and pie charts for shares.',[['scatter','Shows how two variables relate'],['bar','Compares categories with bars'],['histogram','Shows how values are distributed in bins'],['pie','Shows parts of a whole'],['autopct','Prints percentage labels on pie slices']]),
+N('ml_stats','ML: Statistics Basics','python_ml_getting_started.asp','Machine learning means letting a computer learn patterns from data. First you need statistics: averages, spread, percentiles and distributions.',[['machine learning','Programs that learn patterns from data to make predictions'],['mean','The average'],['median','The middle value when sorted'],['mode','The most frequent value'],['standard deviation','How spread out values are around the mean'],['percentile','The value below which a given percent of data falls'],['normal distribution','Bell shaped curve around the mean']]),
+N('ml_regression','ML: Regression','python_ml_linear_regression.asp','Regression predicts a number. Linear regression fits a straight line, polynomial regression a curve, and multiple regression uses several inputs.',[['scatter plot','Shows the relationship between two variables'],['linear regression','Fits a straight line through the data'],['r value','Measures how strongly variables are related'],['polynomial regression','Fits a curved line'],['multiple regression','Predicts from more than one input']]),
+N('ml_prep','ML: Data Preparation','python_ml_scale.asp','Before training, data is usually scaled, split into training and test sets, and categorical columns are turned into numbers.',[['scale','Puts features on a similar range'],['train test','Split data to learn on one part and judge on the other'],['categorical data','Text categories must be converted to numbers'],['one hot','Creates a yes or no column for each category'],['overfitting','Model memorises training data and fails on new data']]),
+N('ml_models','ML: Models','python_ml_decision_tree.asp','Common models are decision trees, logistic regression, k-nearest neighbours and k-means clustering. Tools like grid search, cross validation, confusion matrices and ROC curves help you tune and judge them.',[['decision tree','A flowchart of yes or no questions'],['logistic regression','Predicts a category such as yes or no'],['k nearest neighbors','Classifies by the closest examples'],['k means','Groups data into k clusters'],['cross validation','Tests the model on several different splits'],['confusion matrix','Table of correct and wrong predictions'],['grid search','Tries combinations of settings to find the best']]),
+N('dsa_arrays','DSA: Lists and Arrays','python_dsa.asp','Data structures and algorithms organise data and the steps to process it. Python lists act as arrays, and Big O notation describes how running time grows with input size.',[['data structure','A way of organising data'],['algorithm','A step by step procedure'],['big o','Describes how time grows as input grows'],['constant time','Takes the same time whatever the size'],['linear time','Time grows in step with the size']]),
+N('dsa_stacksqueues','DSA: Stacks and Queues','python_dsa_stacks.asp','A stack is last in, first out. A queue is first in, first out. Lists work for stacks, and collections.deque is the right tool for queues.',[['stack','Last in, first out'],['push pop','Add to the top and remove from the top'],['queue','First in, first out'],['enqueue dequeue','Add at the back and remove from the front'],['deque','Double ended queue with fast operations at both ends']]),
+N('dsa_linked','DSA: Linked Lists','python_dsa_linkedlists.asp','A linked list is a chain of nodes. Each node holds a value and a reference to the next node. Inserting is cheap, but reaching an item needs walking along the chain.',[['node','Holds data and a link to the next node'],['head','The first node'],['traverse','Walk through nodes following the links'],['insert','Change links to add a node'],['versus array','No fast indexing but easy insertion']]),
+N('dsa_hash','DSA: Hash Tables','python_dsa_hashtables.asp','A hash table uses a hash function to turn a key into a position, giving very fast lookup. Python dictionaries and sets are hash tables.',[['hash function','Turns a key into a number'],['bucket','The slot where items are stored'],['collision','Two keys landing in the same bucket'],['constant lookup','Average lookup time does not depend on size'],['dictionary','Python built-in hash table']]),
+N('dsa_trees','DSA: Trees','python_dsa_trees.asp','A tree is a hierarchy of nodes. A binary tree has at most two children per node, a binary search tree keeps smaller values on the left, and an AVL tree stays balanced automatically.',[['root','The top node'],['leaf','A node with no children'],['binary tree','Each node has up to two children'],['binary search tree','Left is smaller, right is larger'],['traversal','Visiting nodes in order, pre order or post order'],['avl','Self balancing search tree using rotations']]),
+N('dsa_graphs','DSA: Graphs','python_dsa_graphs.asp','A graph is a set of vertices connected by edges. Store it as an adjacency list or matrix, and explore it with breadth-first or depth-first search.',[['vertex','A node of the graph'],['edge','A connection between two vertices'],['adjacency list','Each vertex stores its neighbours'],['breadth first','Explores level by level using a queue'],['depth first','Goes as deep as possible first using a stack or recursion']]),
+N('dsa_search','DSA: Searching','python_dsa_linearsearch.asp','Linear search checks items one by one. Binary search halves a sorted list each step and is far faster on large data.',[['linear search','Checks every item in order'],['binary search','Needs sorted data and halves the range each step'],['middle','Compare with the middle item'],['log n','Binary search grows very slowly with size'],['sorted','Binary search only works on sorted data']]),
+N('dsa_sort_simple','DSA: Simple Sorts','python_dsa_bubblesort.asp','Bubble, selection and insertion sort are simple to understand but slow on large data, taking time proportional to n squared.',[['bubble sort','Swaps neighbours that are out of order'],['selection sort','Repeatedly picks the smallest remaining item'],['insertion sort','Inserts each item into the sorted part'],['quadratic','Time grows with the square of the size'],['in place','Sorts without a second list']]),
+N('dsa_sort_fast','DSA: Faster Sorts','python_dsa_quicksort.asp','Quick sort and merge sort divide the list and work in about n log n time. Counting sort and radix sort avoid comparisons and suit whole numbers.',[['quick sort','Splits around a pivot and sorts each side'],['merge sort','Splits in halves, sorts them and merges'],['divide and conquer','Break a problem into smaller ones'],['counting sort','Counts how many times each value occurs'],['radix sort','Sorts digit by digit']]),
+N('mysql_start','MySQL: Get Started','python_mysql_getstarted.asp','Python talks to MySQL through a connector library. You connect, create a cursor, then create databases and tables with SQL.',[['connector','Library that lets Python talk to MySQL'],['connect','Needs host, user, password and optionally a database'],['cursor','Object used to run SQL statements'],['create database','SQL to make a new database'],['create table','SQL to make a table with columns and a primary key'],['primary key','Column that uniquely identifies each row']]),
+N('mysql_crud','MySQL: Working with Data','python_mysql_insert.asp','Insert, select, update and delete rows with SQL. Always pass values as parameters with placeholders, and call commit after changes.',[['insert','Adds rows to a table'],['select','Reads rows'],['where','Filters rows by a condition'],['placeholder','Use percent s and pass values separately to stay safe from SQL injection'],['commit','Saves changes to the database'],['join','Combines rows from two tables'],['order by','Sorts the result']]),
+N('mongo_start','MongoDB: Get Started','python_mongodb_getstarted.asp','MongoDB stores documents (like dictionaries) in collections. The pymongo library connects Python to it.',[['mongodb','A document database that stores JSON-like data'],['pymongo','The Python driver for MongoDB'],['database','Holds collections'],['collection','A group of documents, like a table'],['document','A record stored as key value pairs']]),
+N('mongo_crud','MongoDB: Working with Data','python_mongodb_insert.asp','Insert documents, find them with query dictionaries, sort, limit, update with operators like set, delete, and drop a collection.',[['insert one','Adds a single document'],['find','Returns matching documents'],['query','A dictionary describing what to match'],['set','Operator that changes fields in an update'],['delete','Removes one or many documents'],['limit','Restricts how many results come back']]),
+N('ref_builtin','Reference: Built-in Functions','python_ref_functions.asp','Python ships with many ready functions that you can use without importing anything.',[['len','Number of items'],['type','The type of a value'],['sorted','Returns a new sorted list'],['enumerate','Pairs index with value'],['zip','Combines sequences item by item'],['any all','Check if any or all items are true'],['isinstance','Checks a value type']]),
+N('ref_string','Reference: String Methods','python_ref_string.asp','Strings have many methods for changing case, searching, splitting and testing content. All return new values.',[['case','upper, lower, title, capitalize and swapcase change case'],['strip','Removes spaces at the ends'],['split join','Break text apart or glue pieces together'],['find replace','Look for or swap text'],['startswith endswith','Check how a string begins or ends'],['isdigit isalpha','Test what the string contains']]),
+N('ref_collections','Reference: List, Tuple, Set, Dict Methods','python_ref_list.asp','Each collection has its own methods. Lists change by append, insert, remove and sort, tuples only count and index, sets add and combine, dictionaries get, update and iterate.',[['list methods','append, extend, insert, remove, pop, sort, reverse, copy, count, index, clear'],['tuple methods','Only count and index'],['set methods','add, remove, discard, union, intersection, difference, update'],['dict methods','get, keys, values, items, update, pop, setdefault, copy']]),
+N('ref_other','Reference: Keywords, Exceptions, Files','python_ref_keywords.asp','Quick lookup for the reserved words, the usual error types and the main file methods.',[['keywords','Reserved words you cannot use as names'],['exceptions','Error classes like ValueError and KeyError'],['file methods','read, readline, write, seek, tell, close'],['glossary','Short definitions of Python terms']]),
+N('ref_modules','Reference: Modules','python_ref_random.asp','Handy modules: random for random choices, requests for web calls, statistics for averages, math and cmath for real and complex maths.',[['random','Random numbers and choices'],['requests','Makes web requests and reads responses'],['statistics','mean, median, mode and standard deviation'],['math','Real number maths'],['cmath','Complex number maths']]),
+N('howto','How To','python_howto_remove_duplicates.asp','Short recipes for common small tasks: removing duplicates from a list, reversing a string, adding two numbers.',[['remove duplicates','Convert to a dict or set to drop repeats'],['reverse','Slice with a negative step'],['add numbers','Read input, convert to numbers, then add']]),
+N('interview','Interview Questions','','Frequently asked Python questions with short answers, useful for revision before interviews.',[['list versus tuple','Lists change, tuples do not'],['mutable','Can be changed after creation'],['shallow copy','Copies only the outer container'],['deep copy','Copies nested objects too'],['decorator','Function that wraps another function'],['generator','Function using yield to produce values lazily'],['gil','Lock that lets one thread run Python bytecode at a time']])
+];
+const D2={
+start:[
+["Install and check","Download the installer from python.org. On Windows, tick the box that adds Python to PATH, otherwise the python command will not be found. Then open a terminal and check.",r`python --version
+pip --version`],
+["Run code in two ways","Interactive: type python and then commands one by one. Script: save a file and run it.",r`# hello.py
+name = input("Your name: ")
+print("Hi", name)
+
+# terminal:
+# python hello.py`],
+["Choosing an editor","VS Code with the Python extension is a popular free choice. PyCharm Community is a full IDE, IDLE ships with Python, and Jupyter notebooks are great for data work.",""],
+["Typical beginner problems","python is not recognized means Python is not on PATH. SyntaxError usually means a missing colon, bracket or quote. IndentationError means uneven spacing. On some systems the command is python3 instead of python.",""]
+],
+output:[
+["print basics","print can take several values and puts a space between them.",r`print("Hello")
+print("Age:", 20, "City:", "Pune")
+print()          # empty line`],
+["sep and end","sep changes the separator and end changes what is printed at the end.",r`print("a", "b", "c", sep="-")    # a-b-c
+print("loading", end="...")
+print("done")                    # loading...done`],
+["Mixing text and variables","",r`name = "Asha"
+score = 91.5
+print("Name: " + name)
+print("Score:", score)
+print(f"{name} scored {score}")`],
+["Print to a file or print special characters","",r`print("tab\there")
+print("two\nlines")
+with open("log.txt", "w") as f:
+    print("saved", file=f)`],
+["Printing collections","",r`print([1, 2, 3])
+print({"a": 1})
+print(*[1, 2, 3])        # unpacks: 1 2 3`]
+],
+match:[
+["Basic match","The first case that fits is run. An underscore is the catch-all.",r`status = 404
+match status:
+    case 200:
+        print("OK")
+    case 404:
+        print("Not found")
+    case _:
+        print("Other")`],
+["Several values in one case","",r`day = "Sat"
+match day:
+    case "Sat" | "Sun":
+        print("weekend")
+    case _:
+        print("weekday")`],
+["Guards","An if after the pattern adds a further condition.",r`n = 15
+match n:
+    case x if x < 10:
+        print("small")
+    case x if x < 100:
+        print("medium")
+    case _:
+        print("large")`],
+["Matching shapes","match can take apart tuples, lists and dictionaries.",r`point = (0, 5)
+match point:
+    case (0, 0):
+        print("origin")
+    case (0, y):
+        print("on the y axis at", y)
+    case (x, 0):
+        print("on the x axis at", x)
+
+cmd = {"action": "go", "dir": "north"}
+match cmd:
+    case {"action": "go", "dir": d}:
+        print("going", d)`]
+],
+range:[
+["Three forms","",r`print(list(range(5)))          # [0, 1, 2, 3, 4]
+print(list(range(2, 6)))       # [2, 3, 4, 5]
+print(list(range(0, 10, 3)))   # [0, 3, 6, 9]
+print(list(range(5, 0, -1)))   # [5, 4, 3, 2, 1]`],
+["Useful facts","range does not store all numbers, so range(10**9) costs almost no memory. You can use len, indexing, slicing and in on it.",r`r = range(10, 20, 2)
+print(len(r), r[0], r[-1], 14 in r)`],
+["Typical uses","",r`for i in range(3):
+    print("round", i)
+
+items = ["a", "b", "c"]
+for i in range(len(items)):
+    print(i, items[i])
+
+print(sum(range(1, 101)))   # 5050`]
+],
+arrays:[
+["Lists as arrays","For most programs a list is the array. It can hold mixed types and grow.",r`cars = ["Ford", "Volvo", "BMW"]
+print(cars[0])
+cars.append("Audi")
+cars.pop(1)
+print(len(cars))`],
+["The array module","array stores one numeric type, which uses less memory than a list.",r`from array import array
+a = array("i", [1, 2, 3])   # i = signed integer
+a.append(4)
+print(a[0], a.tolist())`],
+["NumPy arrays","For serious number crunching use NumPy.",r`import numpy as np
+a = np.array([1, 2, 3])
+print(a * 2)    # [2 4 6]`],
+["Looping and sorting","Everything you learned for lists works the same way.",r`nums = [3, 1, 2]
+for n in nums:
+    print(n)
+nums.sort()
+print(nums)`]
+],
+dates:[
+["Getting the current date and time","",r`import datetime
+now = datetime.datetime.now()
+print(now)
+print(now.year, now.month, now.day)
+print(datetime.date.today())`],
+["Creating a date","",r`d = datetime.date(2026, 10, 18)
+t = datetime.datetime(2026, 10, 18, 9, 30)
+print(d, t)`],
+["Formatting with strftime","Codes: %Y year, %y short year, %m month number, %B month name, %b short month, %d day, %A weekday name, %a short weekday, %H hour 24h, %I hour 12h, %M minute, %S second, %p AM or PM, %j day of the year.",r`now = datetime.datetime.now()
+print(now.strftime("%d %B %Y"))        # 18 October 2026
+print(now.strftime("%A, %I:%M %p"))     # Sunday, 01:30 AM`],
+["Reading text into a date","",r`d = datetime.datetime.strptime("2026-10-18", "%Y-%m-%d")
+print(d.weekday())    # 0 is Monday, 6 is Sunday`],
+["Date arithmetic","",r`from datetime import datetime, timedelta
+today = datetime.now()
+print(today + timedelta(days=7))
+print(today - timedelta(hours=5))
+
+a = datetime(2026, 12, 25)
+print((a - today).days)    # days until a date`]
+],
+math:[
+["Built-in maths","",r`print(abs(-7.5))
+print(round(3.14159, 2))   # 3.14
+print(min(4, 2, 9), max(4, 2, 9))
+print(pow(2, 10), 2 ** 10)
+print(sum([1, 2, 3]))`],
+["The math module","",r`import math
+print(math.sqrt(49))
+print(math.ceil(4.1), math.floor(4.9))
+print(math.pi, math.e)
+print(math.factorial(5))
+print(math.gcd(12, 18))
+print(math.log(100, 10))
+print(math.sin(math.pi / 2))`],
+["Floating point caution","Decimal fractions cannot always be stored exactly, so compare floats with isclose.",r`print(0.1 + 0.2 == 0.3)               # False
+print(math.isclose(0.1 + 0.2, 0.3))   # True`],
+["Complex numbers","The cmath module is the complex-number version.",r`import cmath
+print(cmath.sqrt(-1))   # 1j`]
+],
+json:[
+["Python to JSON","dumps gives a string. indent and sort_keys make it readable.",r`import json
+data = {"name": "Asha", "age": 20, "langs": ["Python", "SQL"], "active": True, "boss": None}
+text = json.dumps(data, indent=2, sort_keys=True)
+print(text)`],
+["JSON to Python","",r`s = '{"name": "Asha", "age": 20}'
+d = json.loads(s)
+print(d["name"])`],
+["Files","dump and load work with open file objects.",r`with open("data.json", "w") as f:
+    json.dump(data, f, indent=2)
+
+with open("data.json") as f:
+    back = json.load(f)`],
+["Type conversion","dict becomes object, list and tuple become array, str becomes string, int and float become number, True and False become true and false, None becomes null.",""],
+["Custom objects","JSON cannot store arbitrary objects, so convert them first or give default.",r`class P:
+    def __init__(self, n): self.n = n
+
+print(json.dumps(P("x"), default=lambda o: o.__dict__))`]
+],
+regex:[
+["Searching","search finds the first match anywhere, match only checks the start, fullmatch needs the whole text to match.",r`import re
+text = "The rain in Spain"
+m = re.search(r"ain", text)
+print(m.group(), m.start(), m.end())
+print(re.match(r"The", text) is not None)`],
+["Finding all and splitting","",r`print(re.findall(r"ain", text))          # ['ain', 'ain']
+print(re.findall(r"\d+", "a1 b22 c333"))    # ['1', '22', '333']
+print(re.split(r"\s", text))                # split on whitespace`],
+["Replacing","",r`print(re.sub(r"\s", "_", text))         # The_rain_in_Spain
+print(re.sub(r"\d", "#", "a1b2", count=1))`],
+["Common symbols","Dot any character, caret start, dollar end, star zero or more, plus one or more, question mark zero or one, braces exact counts, square brackets a set, pipe or, backslash d a digit, backslash w a word character, backslash s whitespace, backslash b a word boundary.",""],
+["Groups and flags","Brackets capture parts. Flags such as IGNORECASE change behaviour. compile saves a pattern for reuse.",r`m = re.search(r"(\w+)@(\w+)\.com", "mail asha@site.com now")
+print(m.group(1), m.group(2))     # asha site
+
+print(re.findall(r"spain", text, re.IGNORECASE))
+pat = re.compile(r"\d{3}-\d{4}")
+print(pat.findall("call 555-1234"))`]
+],
+pip:[
+["Everyday commands","",r`pip install requests
+pip install requests==2.31.0      # specific version
+pip install --upgrade requests
+pip uninstall requests
+pip list
+pip show requests
+pip freeze`],
+["requirements.txt","Save the exact packages of a project and reinstall them anywhere.",r`pip freeze > requirements.txt
+pip install -r requirements.txt`],
+["Using a package","",r`import requests
+r = requests.get("https://example.com")
+print(r.status_code)`],
+["If pip is not found","Try python -m pip install name, which uses the pip of that exact Python.",""]
+],
+strfmt:[
+["f-strings","Put an f before the quotes and expressions in curly braces.",r`name = "Asha"
+price = 49.5
+print(f"{name} pays {price:.2f}")
+print(f"{2 + 3 = }")        # shows expression and result
+print(f"{name!r}")`],
+["Format specs","Pattern: {value:fill align width , .precision type}.",r`print(f"{3.14159:.2f}")      # 3.14
+print(f"{42:5d}|")            # '   42|'
+print(f"{42:<5d}|{42:^5d}|{42:>5d}")
+print(f"{42:05d}")            # 00042
+print(f"{1234567:,}")         # 1,234,567
+print(f"{0.256:.1%}")         # 25.6%
+print(f"{255:b} {255:x} {255:o}")   # binary, hex, octal`],
+["format() method","",r`print("{} is {} years".format("Ravi", 20))
+print("{0} and {0}".format("echo"))
+print("{n}: {s:.1f}".format(n="x", s=2.34))`],
+["Percent style","The old style still appears in older code.",r`print("%s is %d years old" % ("Ravi", 20))
+print("%.2f" % 3.14159)`]
+],
+none:[
+["What None is","None is a single special object of type NoneType. It means no value.",r`x = None
+print(x, type(x))     # None <class 'NoneType'>`],
+["Test with is","None is unique, so test identity rather than equality.",r`if x is None:
+    print("empty")
+if x is not None:
+    print("has value")`],
+["None is not zero","None, 0, empty text and False are all falsy, but they are different things.",r`print(None == 0, None == "", None == False)   # all False`],
+["Functions and None","A function with no return statement returns None. Also dict.get returns None for a missing key.",r`def hello():
+    print("hi")
+
+result = hello()
+print(result)    # None`],
+["Mutable default trap","A default list is created once and shared between calls. Use None and create the list inside.",r`def add(item, bag=None):
+    if bag is None:
+        bag = []
+    bag.append(item)
+    return bag`]
+],
+userinput:[
+["Basic input","",r`name = input("What is your name? ")
+print("Hello,", name)`],
+["Numbers","input returns a string. Cast before maths.",r`a = int(input("First: "))
+b = int(input("Second: "))
+print("Sum:", a + b)`],
+["Validate with a loop","",r`while True:
+    try:
+        age = int(input("Age: "))
+        break
+    except ValueError:
+        print("Type a whole number")`],
+["Several values on one line","",r`nums = list(map(int, input("Numbers: ").split()))
+print(sum(nums))`]
+],
+venv:[
+["Create and activate","",r`python -m venv myenv
+
+# Windows
+myenv\Scripts\activate
+
+# macOS / Linux
+source myenv/bin/activate`],
+["Work inside it","Once active, pip installs go only into that environment.",r`pip install requests
+pip freeze > requirements.txt
+deactivate`],
+["Why use one","Two projects may need different versions of the same library. Separate environments avoid conflicts, and you can share requirements.txt so others recreate yours. Do not commit the environment folder itself.",""]
+],
+oop:[
+["The four ideas","Encapsulation bundles data and methods and controls access. Abstraction hides complexity behind a simple interface. Inheritance lets a class reuse another. Polymorphism lets different classes answer the same method call in their own way.",""],
+["Why OOP","It models real things, keeps related code together, makes big programs easier to organise and lets you reuse code through inheritance.",""],
+["Quick example","",r`class Student:
+    school = "ABC College"          # shared by all
+
+    def __init__(self, name):
+        self.name = name            # unique to each
+
+    def hello(self):
+        return f"Hi, I am {self.name} from {self.school}"
+
+s1 = Student("Asha")
+s2 = Student("Ravi")
+print(s1.hello())
+print(s2.hello())`]
+],
+classprops:[
+["Instance and class properties","",r`class Car:
+    wheels = 4                      # class property
+    def __init__(self, brand):
+        self.brand = brand          # instance property
+
+c = Car("Ford")
+print(c.brand, c.wheels, Car.wheels)`],
+["Changing and deleting","Setting on an instance affects only that object. Setting on the class affects all that have not overridden it.",r`c.brand = "Tata"
+Car.wheels = 6
+del c.brand`],
+["Dynamic access","",r`print(getattr(c, "wheels"))
+setattr(c, "color", "red")
+print(hasattr(c, "color"))
+print(c.__dict__)       # all instance properties`],
+["Default values","",r`class User:
+    def __init__(self, name, role="guest"):
+        self.name = name
+        self.role = role`]
+],
+classmethods:[
+["Three kinds of methods","",r`class Pizza:
+    count = 0
+    def __init__(self, size):
+        self.size = size
+        Pizza.count += 1
+
+    def describe(self):                 # instance method
+        return f"{self.size} inch pizza"
+
+    @classmethod
+    def small(cls):                     # class method
+        return cls(8)
+
+    @staticmethod
+    def is_valid(size):                 # static method
+        return 6 <= size <= 20
+
+p = Pizza.small()
+print(p.describe(), Pizza.is_valid(30), Pizza.count)`],
+["When to use which","Instance methods work with one object's data. Class methods work with the class, often as alternative constructors. Static methods are utilities that do not need the object or the class but belong logically in it.",""]
+],
+magic:[
+["The most useful dunder methods","__init__ creates, __str__ is the readable text, __repr__ is the technical text, __len__ for len(), __getitem__ for brackets, __contains__ for in, __add__ for plus, __eq__ for equals, __lt__ for less than, __call__ lets an object be called like a function, __enter__ and __exit__ support with.",""],
+["Example: a Vector class","",r`class Vector:
+    def __init__(self, x, y):
+        self.x, self.y = x, y
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
+    def __str__(self):
+        return f"({self.x}, {self.y})"
+    def __repr__(self):
+        return f"Vector({self.x}, {self.y})"
+    def __len__(self):
+        return 2
+
+a, b = Vector(1, 2), Vector(3, 4)
+print(a + b)         # (4, 6)
+print(a == b)        # False
+print(len(a))        # 2
+print([a, b])        # uses repr`],
+["Callable and context manager","",r`class Greeter:
+    def __call__(self, name):
+        return "Hi " + name
+
+class Timer:
+    def __enter__(self):
+        print("start"); return self
+    def __exit__(self, *args):
+        print("end")
+
+print(Greeter()("Asha"))
+with Timer():
+    print("working")`]
+],
+polymorphism:[
+["Same function, different types","",r`print(len("hello"), len([1, 2, 3]), len({"a": 1}))`],
+["Same method, different classes","",r`class Dog:
+    def speak(self): return "Woof"
+class Cat:
+    def speak(self): return "Meow"
+
+for animal in (Dog(), Cat()):
+    print(animal.speak())`],
+["With inheritance","Children override parent methods.",r`class Shape:
+    def area(self): return 0
+class Square(Shape):
+    def __init__(self, s): self.s = s
+    def area(self): return self.s ** 2
+class Circle(Shape):
+    def __init__(self, r): self.r = r
+    def area(self): return 3.14159 * self.r ** 2
+
+for s in [Square(2), Circle(1)]:
+    print(s.area())`],
+["Duck typing and abstract classes","Python does not check the class, only that the needed method exists. If you want to force children to implement something, use the abc module.",r`from abc import ABC, abstractmethod
+
+class Base(ABC):
+    @abstractmethod
+    def run(self): ...
+
+# Base() raises TypeError; children must define run`]
+],
+encapsulation:[
+["Naming conventions","",r`class Account:
+    def __init__(self):
+        self.owner = "Asha"      # public
+        self._type = "saving"    # protected by convention
+        self.__balance = 0       # private (name mangled)
+
+a = Account()
+print(a.owner, a._type)
+# print(a.__balance)       # AttributeError
+print(a._Account__balance) # still reachable, but discouraged`],
+["Getters and setters with property","Use @property to validate while keeping a simple attribute style.",r`class Account:
+    def __init__(self):
+        self.__balance = 0
+
+    @property
+    def balance(self):
+        return self.__balance
+
+    @balance.setter
+    def balance(self, value):
+        if value < 0:
+            raise ValueError("Balance cannot be negative")
+        self.__balance = value
+
+a = Account()
+a.balance = 100
+print(a.balance)`],
+["Why it matters","Hiding the internals lets you change the implementation later without breaking code that uses the class, and protects against invalid data.",""]
+],
+inner:[
+["Defining an inner class","",r`class University:
+    def __init__(self):
+        self.dept = self.Department("CS")
+
+    class Department:
+        def __init__(self, name):
+            self.name = name
+
+u = University()
+print(u.dept.name)
+
+d = University.Department("Maths")   # also reachable via the outer class`],
+["When to use","Use an inner class when it only makes sense together with its outer class, such as a Node class inside a LinkedList. Many programmers prefer separate top-level classes unless the grouping really helps.",""]
+],
+readfiles:[
+["Reading it all","",r`with open("notes.txt", encoding="utf-8") as f:
+    text = f.read()
+print(text)`],
+["Line by line","Looping directly over the file does not load everything into memory.",r`with open("notes.txt") as f:
+    for line in f:
+        print(line.rstrip())`],
+["Other read methods","",r`with open("notes.txt") as f:
+    first5 = f.read(5)
+    f.seek(0)
+    one = f.readline()
+    rest = f.readlines()       # list of lines
+    print(f.tell())            # current position`],
+["Handling missing files","",r`try:
+    with open("missing.txt") as f:
+        print(f.read())
+except FileNotFoundError:
+    print("File not found")`],
+["Reading in chunks","For very large files, read a fixed size each time.",r`with open("big.bin", "rb") as f:
+    while chunk := f.read(4096):
+        pass   # process chunk`]
+],
+writefiles:[
+["Overwrite and append","",r`with open("a.txt", "w") as f:
+    f.write("Hello\n")
+    f.write("World\n")
+
+with open("a.txt", "a") as f:
+    f.write("More text\n")`],
+["Create only if new","",r`try:
+    with open("new.txt", "x") as f:
+        f.write("created")
+except FileExistsError:
+    print("already there")`],
+["Many lines at once","",r`lines = ["one\n", "two\n", "three\n"]
+with open("b.txt", "w") as f:
+    f.writelines(lines)`],
+["CSV example","",r`import csv
+with open("people.csv", "w", newline="") as f:
+    w = csv.writer(f)
+    w.writerow(["name", "age"])
+    w.writerow(["Asha", 20])`],
+["Important note","Mode w deletes existing content as soon as the file is opened, so use a when you want to keep it.",""]
+],
+deletefiles:[
+["Delete a file","Check first so you do not get an error.",r`import os
+if os.path.exists("old.txt"):
+    os.remove("old.txt")
+else:
+    print("no such file")`],
+["Delete a folder","rmdir only works on empty folders. For a folder with content, use shutil.rmtree. This cannot be undone.",r`os.rmdir("emptyfolder")
+
+import shutil
+shutil.rmtree("folder_with_files")`],
+["pathlib way","",r`from pathlib import Path
+p = Path("old.txt")
+if p.exists():
+    p.unlink()
+Path("temp").mkdir(exist_ok=True)`],
+["Safety","Deleted files skip the recycle bin. Double check the path and keep backups of anything important.",""]
+],
+numpy:[
+["Creating arrays","Install first with pip install numpy.",r`import numpy as np
+a = np.array([1, 2, 3])
+b = np.array([[1, 2, 3], [4, 5, 6]])
+print(a.shape, b.shape, b.ndim, b.dtype)
+
+print(np.zeros((2, 3)))
+print(np.ones(3))
+print(np.arange(0, 10, 2))      # [0 2 4 6 8]
+print(np.linspace(0, 1, 5))     # 5 evenly spaced numbers
+print(np.random.rand(2, 2))`],
+["Indexing and slicing","",r`print(b[0, 1])       # row 0, column 1 -> 2
+print(b[:, 1])       # whole column 1
+print(b[1, :2])      # row 1, first two items`],
+["Vectorised maths","Operations act on every element without a loop.",r`a = np.array([1, 2, 3])
+print(a * 2, a + 10, a ** 2)
+print(a + np.array([10, 20, 30]))
+print(a.sum(), a.mean(), a.max(), a.std())`],
+["Broadcasting","Smaller arrays are stretched to match larger ones when shapes are compatible.",r`m = np.array([[1, 2, 3], [4, 5, 6]])
+print(m + np.array([10, 20, 30]))   # added to each row`],
+["Reshape and boolean masks","",r`x = np.arange(12).reshape(3, 4)
+print(x)
+print(x[x > 5])           # only values greater than 5
+print(x.sum(axis=0))      # column sums
+print(x.sum(axis=1))      # row sums`]
+],
+pandas:[
+["Series and DataFrame","Install with pip install pandas.",r`import pandas as pd
+s = pd.Series([10, 20, 30], index=["a", "b", "c"])
+
+df = pd.DataFrame({
+    "name": ["Asha", "Ravi", "Meena"],
+    "age": [20, 25, 22],
+    "city": ["Pune", "Mumbai", "Pune"],
+})
+print(df)`],
+["Loading and looking at data","",r`df = pd.read_csv("data.csv")
+print(df.head())       # first rows
+print(df.info())       # columns and types
+print(df.describe())   # numeric summary
+print(df.shape)`],
+["Selecting","",r`df["age"]                      # one column
+df[["name", "age"]]            # several columns
+df.loc[0, "name"]              # by label
+df.iloc[0, 1]                  # by position
+df[df["age"] > 21]             # filter rows
+df[(df["age"] > 21) & (df["city"] == "Pune")]`],
+["Changing the table","",r`df["age_next"] = df["age"] + 1
+df = df.sort_values("age", ascending=False)
+df = df.rename(columns={"name": "student"})`],
+["Grouping and cleaning","",r`print(df.groupby("city")["age"].mean())
+df = df.dropna()               # remove rows with missing data
+df["age"] = df["age"].fillna(0)
+df.to_csv("out.csv", index=False)
+
+merged = pd.merge(df1, df2, on="id")   # like a SQL join`]
+],
+scipy:[
+["What SciPy offers","Install with pip install scipy. Modules include constants, optimize, integrate, interpolate, stats, linalg, sparse, spatial, signal and cluster.",""],
+["Constants and optimisation","",r`from scipy import constants, optimize
+print(constants.pi, constants.golden)
+
+result = optimize.minimize(lambda x: (x - 3) ** 2, x0=0)
+print(result.x)        # about 3`],
+["Integration and interpolation","",r`from scipy import integrate, interpolate
+area, err = integrate.quad(lambda x: x ** 2, 0, 3)
+print(area)            # 9.0
+
+f = interpolate.interp1d([0, 1, 2], [0, 10, 20])
+print(f(1.5))          # 15.0`],
+["Statistics and sparse matrices","",r`from scipy import stats
+print(stats.norm.cdf(0))                 # 0.5
+print(stats.ttest_ind([1, 2, 3], [4, 5, 6]))
+
+from scipy.sparse import csr_matrix
+import numpy as np
+m = csr_matrix(np.array([[0, 0, 1], [0, 0, 0]]))
+print(m)`]
+],
+django:[
+["Setup","Use a virtual environment and then install Django.",r`pip install django
+django-admin startproject mysite
+cd mysite
+python manage.py runserver      # open http://127.0.0.1:8000/`],
+["Project and apps","A project holds settings. An app is one feature. Create one and add it to INSTALLED_APPS in settings.py.",r`python manage.py startapp members`],
+["View and URL","",r`# members/views.py
+from django.http import HttpResponse
+def hello(request):
+    return HttpResponse("Hello from Django")
+
+# members/urls.py
+from django.urls import path
+from . import views
+urlpatterns = [path("", views.hello)]
+
+# mysite/urls.py
+from django.urls import path, include
+urlpatterns = [path("members/", include("members.urls"))]`],
+["Models and migrations","A model is a class that becomes a table.",r`# members/models.py
+from django.db import models
+class Member(models.Model):
+    firstname = models.CharField(max_length=255)
+    age = models.IntegerField()
+
+# terminal
+python manage.py makemigrations
+python manage.py migrate`],
+["Admin and templates","createsuperuser makes an admin login at /admin. Templates are HTML files in a templates folder using double curly braces for variables and curly-percent tags for logic.",r`python manage.py createsuperuser`]
+],
+mpl_basics:[
+["First plot","Install with pip install matplotlib.",r`import matplotlib.pyplot as plt
+x = [1, 2, 3, 4]
+y = [2, 4, 1, 5]
+plt.plot(x, y)
+plt.show()`],
+["Markers, line style and colour","",r`plt.plot(x, y, marker="o", linestyle="--", color="green", linewidth=2)
+# shorthand: plt.plot(x, y, "o--g")`],
+["Labels, title, grid, legend","",r`plt.plot(x, y, label="sales")
+plt.xlabel("Month")
+plt.ylabel("Units")
+plt.title("Monthly sales")
+plt.grid(True)
+plt.legend()
+plt.show()`],
+["Subplots","Subplot takes rows, columns and the position.",r`plt.subplot(1, 2, 1)
+plt.plot(x, y)
+plt.title("First")
+plt.subplot(1, 2, 2)
+plt.plot(y, x)
+plt.title("Second")
+plt.tight_layout()
+plt.show()`],
+["Saving","",r`plt.savefig("chart.png", dpi=150)`]
+],
+mpl_charts:[
+["Scatter","",r`import matplotlib.pyplot as plt
+plt.scatter([1, 2, 3, 4], [5, 7, 4, 8], color="red", s=60)
+plt.show()`],
+["Bars","bar draws vertical bars and barh horizontal ones.",r`plt.bar(["A", "B", "C"], [10, 25, 15], color="skyblue")
+plt.show()
+plt.barh(["A", "B", "C"], [10, 25, 15])`],
+["Histogram","",r`import numpy as np
+data = np.random.normal(170, 10, 250)
+plt.hist(data, bins=15)
+plt.show()`],
+["Pie chart","",r`plt.pie([40, 30, 20, 10], labels=["a", "b", "c", "d"], autopct="%1.1f%%", startangle=90)
+plt.show()`]
+],
+ml_stats:[
+["Data types","Numerical (discrete or continuous), categorical (labels with no order) and ordinal (labels with an order like grades).",""],
+["Mean, median, mode","",r`import numpy as np
+from scipy import stats
+speed = [99, 86, 87, 88, 111, 86, 103, 87, 94, 78, 77, 85, 86]
+print(np.mean(speed))
+print(np.median(speed))
+print(stats.mode(speed, keepdims=False).mode)`],
+["Spread","Variance is the average squared distance from the mean. Standard deviation is its square root. A low value means values are close to the mean.",r`print(np.std(speed))
+print(np.var(speed))`],
+["Percentiles","The 75th percentile means 75 percent of values are lower.",r`print(np.percentile(speed, 75))`],
+["Distributions","A histogram of many values shows the distribution. The normal distribution is bell shaped and centred on the mean.",r`x = np.random.normal(5.0, 1.0, 100000)   # mean 5, std 1
+import matplotlib.pyplot as plt
+plt.hist(x, 100)
+plt.show()`]
+],
+ml_regression:[
+["Linear regression","Fit a straight line and use it to predict.",r`from scipy import stats
+x = [5, 7, 8, 7, 2, 17, 2, 9, 4, 11, 12, 9, 6]
+y = [99, 86, 87, 88, 111, 86, 103, 87, 94, 78, 77, 85, 86]
+slope, intercept, r, p, std_err = stats.linregress(x, y)
+predict = lambda v: slope * v + intercept
+print(r)            # close to -1 or 1 means strong relationship
+print(predict(10))`],
+["Polynomial regression","Use when a straight line does not fit.",r`import numpy as np
+from sklearn.metrics import r2_score
+model = np.poly1d(np.polyfit(x, y, 3))
+print(r2_score(y, model(x)))     # closer to 1 is a better fit
+print(model(10))`],
+["Multiple regression","Several inputs predict one output.",r`from sklearn import linear_model
+X = [[1300, 1], [1500, 2], [1800, 3], [2100, 3]]   # size, rooms
+y = [100, 130, 160, 190]
+reg = linear_model.LinearRegression().fit(X, y)
+print(reg.predict([[1700, 2]]))`]
+],
+ml_prep:[
+["Scaling","Features with very different ranges can mislead a model, so standardise them.",r`from sklearn.preprocessing import StandardScaler
+import pandas as pd
+scale = StandardScaler()
+X = [[1300, 1.0], [1500, 1.6], [1800, 2.0]]
+print(scale.fit_transform(X))`],
+["Train and test","Train on most of the data and measure on the part the model never saw.",r`from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)`],
+["Categorical data","Models need numbers, so convert text categories into indicator columns.",r`df = pd.DataFrame({"car": ["Ford", "BMW", "Ford"], "price": [10, 30, 12]})
+print(pd.get_dummies(df, columns=["car"]))`],
+["Overfitting","A model that scores very well on training data but badly on test data has memorised instead of learned. Simpler models, more data and cross validation help.",""]
+],
+ml_models:[
+["Decision tree","",r`from sklearn.tree import DecisionTreeClassifier
+X = [[25, 1], [35, 0], [45, 1], [20, 0]]
+y = [0, 1, 1, 0]
+tree = DecisionTreeClassifier().fit(X, y)
+print(tree.predict([[30, 1]]))`],
+["Logistic regression and confusion matrix","Logistic regression predicts a class. The confusion matrix counts true and false positives and negatives.",r`from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import confusion_matrix
+model = LogisticRegression().fit(X, y)
+pred = model.predict(X)
+print(confusion_matrix(y, pred))`],
+["K-means clustering","Group data into k clusters without labels.",r`from sklearn.cluster import KMeans
+data = [[1, 1], [1, 2], [8, 8], [9, 8]]
+km = KMeans(n_clusters=2, n_init=10).fit(data)
+print(km.labels_)`],
+["K-nearest neighbours","",r`from sklearn.neighbors import KNeighborsClassifier
+knn = KNeighborsClassifier(n_neighbors=3).fit(X, y)`],
+["Hierarchical clustering","",r`from sklearn.cluster import AgglomerativeClustering
+labels = AgglomerativeClustering(n_clusters=2).fit_predict(data)`],
+["Tuning and evaluating","Grid search tries settings, cross validation scores on several splits, bagging combines many models, and AUC-ROC summarises a classifier across thresholds.",r`from sklearn.model_selection import GridSearchCV, cross_val_score
+from sklearn.ensemble import BaggingClassifier
+from sklearn.metrics import roc_auc_score
+
+grid = GridSearchCV(LogisticRegression(), {"C": [0.1, 1, 10]}, cv=2)
+print(cross_val_score(DecisionTreeClassifier(), X, y, cv=2))
+bag = BaggingClassifier(DecisionTreeClassifier(), n_estimators=20).fit(X, y)
+print(roc_auc_score(y, model.predict_proba(X)[:, 1]))`]
+],
+dsa_arrays:[
+["Python lists as arrays","",r`arr = [64, 34, 25, 12]
+print(arr[2])            # access by index: constant time
+arr.append(5)            # add at end: constant time on average
+arr.insert(0, 99)        # add at start: linear time, shifts items
+arr.remove(25)           # linear time`],
+["Big O in plain words","O(1) constant, O(log n) grows very slowly, O(n) grows with size, O(n log n) good sorting, O(n squared) nested loops, which gets slow quickly.",""],
+["Example: find the lowest value","This loop is O(n) because it looks at each item once.",r`def find_min(a):
+    low = a[0]
+    for v in a:
+        if v < low:
+            low = v
+    return low
+
+print(find_min([7, 12, 9, 4, 11]))`]
+],
+dsa_stacksqueues:[
+["Stack","Use append for push and pop for pop. Both are fast.",r`stack = []
+stack.append("a")
+stack.append("b")
+print(stack.pop())    # b  (last in, first out)
+print(stack[-1])      # peek: a
+print(len(stack) == 0)   # is empty?`],
+["Queue","A list is slow at the front, so use deque.",r`from collections import deque
+q = deque()
+q.append("a")        # enqueue
+q.append("b")
+print(q.popleft())   # a  (first in, first out)`],
+["Where they are used","Stacks: undo history, bracket matching, function calls. Queues: print jobs, task scheduling, breadth-first search.",""]
+],
+dsa_linked:[
+["Node and list","",r`class Node:
+    def __init__(self, data):
+        self.data = data
+        self.next = None
+
+class LinkedList:
+    def __init__(self):
+        self.head = None
+
+    def add_front(self, data):
+        n = Node(data)
+        n.next = self.head
+        self.head = n
+
+    def add_end(self, data):
+        n = Node(data)
+        if not self.head:
+            self.head = n
+            return
+        cur = self.head
+        while cur.next:
+            cur = cur.next
+        cur.next = n
+
+    def remove(self, data):
+        cur, prev = self.head, None
+        while cur:
+            if cur.data == data:
+                if prev:
+                    prev.next = cur.next
+                else:
+                    self.head = cur.next
+                return
+            prev, cur = cur, cur.next
+
+    def show(self):
+        cur, out = self.head, []
+        while cur:
+            out.append(cur.data)
+            cur = cur.next
+        print(" -> ".join(map(str, out)))`],
+["Versus arrays","Linked list: fast insert and delete at a known place, no resizing, slow access by position. Array: instant access by index, slow insert in the middle.",""]
+],
+dsa_hash:[
+["Idea","A hash function maps a key to a bucket number. Looking up a key means computing its hash and going straight to the bucket.",r`print(hash("apple") % 10)     # a bucket number between 0 and 9`],
+["Simple hash set with chaining","Collisions are handled by keeping a small list in each bucket.",r`class HashSet:
+    def __init__(self, size=10):
+        self.size = size
+        self.buckets = [[] for _ in range(size)]
+    def _idx(self, key):
+        return hash(key) % self.size
+    def add(self, key):
+        b = self.buckets[self._idx(key)]
+        if key not in b:
+            b.append(key)
+    def contains(self, key):
+        return key in self.buckets[self._idx(key)]
+
+hs = HashSet()
+hs.add("Asha"); hs.add("Ravi")
+print(hs.contains("Asha"), hs.contains("Zed"))`],
+["In Python","dict and set are hash tables, which is why membership tests on sets are much faster than on lists.",""]
+],
+dsa_trees:[
+["Terms","Root is the top node. Parent and child describe links. Leaf has no children. Height is the longest path down. A binary tree allows at most two children.",""],
+["Binary tree and traversals","",r`class Node:
+    def __init__(self, v):
+        self.v, self.left, self.right = v, None, None
+
+def preorder(n):
+    if n: print(n.v); preorder(n.left); preorder(n.right)
+def inorder(n):
+    if n: inorder(n.left); print(n.v); inorder(n.right)
+def postorder(n):
+    if n: postorder(n.left); postorder(n.right); print(n.v)
+
+root = Node(1); root.left = Node(2); root.right = Node(3)
+inorder(root)`],
+["Binary search tree","Smaller values go left, larger go right, so inorder traversal gives sorted output.",r`def insert(n, v):
+    if n is None:
+        return Node(v)
+    if v < n.v:
+        n.left = insert(n.left, v)
+    else:
+        n.right = insert(n.right, v)
+    return n
+
+def search(n, v):
+    if n is None or n.v == v:
+        return n
+    return search(n.left, v) if v < n.v else search(n.right, v)
+
+root = None
+for x in [8, 3, 10, 1, 6]:
+    root = insert(root, x)
+inorder(root)      # 1 3 6 8 10`],
+["AVL tree","An AVL tree is a binary search tree that keeps itself balanced. The balance factor is the left height minus the right height and must stay between -1 and 1. When it breaks, rotations restore it: left, right, left-right or right-left. This keeps search, insert and delete at O(log n).",""]
+],
+dsa_graphs:[
+["Representing a graph","",r`graph = {
+    "A": ["B", "C"],
+    "B": ["A", "D"],
+    "C": ["A", "D"],
+    "D": ["B", "C"],
+}`],
+["Breadth-first search","Visits nearest vertices first using a queue. It finds the fewest-edge path in an unweighted graph.",r`from collections import deque
+def bfs(g, start):
+    seen, q, order = {start}, deque([start]), []
+    while q:
+        v = q.popleft()
+        order.append(v)
+        for n in g[v]:
+            if n not in seen:
+                seen.add(n)
+                q.append(n)
+    return order
+print(bfs(graph, "A"))`],
+["Depth-first search","Goes deep before backtracking.",r`def dfs(g, v, seen=None):
+    seen = seen or set()
+    seen.add(v)
+    for n in g[v]:
+        if n not in seen:
+            dfs(g, n, seen)
+    return seen`],
+["Types","Directed edges have a direction, weighted edges carry a cost, and a cycle is a path that returns to its start.",""]
+],
+dsa_search:[
+["Linear search","Works on any list. Time O(n).",r`def linear(a, target):
+    for i, v in enumerate(a):
+        if v == target:
+            return i
+    return -1`],
+["Binary search","The list must be sorted. Each step discards half. Time O(log n).",r`def binary(a, target):
+    lo, hi = 0, len(a) - 1
+    while lo <= hi:
+        mid = (lo + hi) // 2
+        if a[mid] == target:
+            return mid
+        if a[mid] < target:
+            lo = mid + 1
+        else:
+            hi = mid - 1
+    return -1
+
+print(binary([1, 3, 5, 7, 9, 11], 7))   # 3`]
+],
+dsa_sort_simple:[
+["Bubble sort","Repeatedly swap neighbours that are in the wrong order.",r`def bubble(a):
+    n = len(a)
+    for i in range(n - 1):
+        swapped = False
+        for j in range(n - 1 - i):
+            if a[j] > a[j + 1]:
+                a[j], a[j + 1] = a[j + 1], a[j]
+                swapped = True
+        if not swapped:
+            break
+    return a`],
+["Selection sort","Find the smallest remaining value and put it next.",r`def selection(a):
+    for i in range(len(a)):
+        m = min(range(i, len(a)), key=a.__getitem__)
+        a[i], a[m] = a[m], a[i]
+    return a`],
+["Insertion sort","Take each value and insert it into the sorted part on its left.",r`def insertion(a):
+    for i in range(1, len(a)):
+        key, j = a[i], i - 1
+        while j >= 0 and a[j] > key:
+            a[j + 1] = a[j]
+            j -= 1
+        a[j + 1] = key
+    return a`],
+["Speed","All three are O(n squared) in the worst case, which is fine for small lists only. Python's own sorted and list.sort use a much faster method.",""]
+],
+dsa_sort_fast:[
+["Quick sort","Choose a pivot, put smaller values on one side and larger on the other, and repeat on each side. Average O(n log n).",r`def quick(a):
+    if len(a) <= 1:
+        return a
+    p = a[len(a) // 2]
+    return quick([x for x in a if x < p]) + [x for x in a if x == p] + quick([x for x in a if x > p])`],
+["Merge sort","Split in half, sort each half, merge. Always O(n log n).",r`def merge_sort(a):
+    if len(a) <= 1:
+        return a
+    mid = len(a) // 2
+    l, r_ = merge_sort(a[:mid]), merge_sort(a[mid:])
+    out = []
+    while l and r_:
+        out.append(l.pop(0) if l[0] <= r_[0] else r_.pop(0))
+    return out + l + r_`],
+["Counting sort","Works for small whole numbers by counting how many times each appears. O(n + k).",r`def counting(a):
+    counts = [0] * (max(a) + 1)
+    for v in a:
+        counts[v] += 1
+    out = []
+    for v, c in enumerate(counts):
+        out += [v] * c
+    return out`],
+["Radix sort","Sort by the last digit, then the next, and so on, using a stable sort such as counting sort for each digit. Good for large sets of integers of similar length.",""]
+],
+mysql_start:[
+["Install and connect","",r`pip install mysql-connector-python
+
+import mysql.connector
+db = mysql.connector.connect(host="localhost", user="root", password="yourpassword")
+cur = db.cursor()
+print(db)`],
+["Create a database","",r`cur.execute("CREATE DATABASE school")
+cur.execute("SHOW DATABASES")
+for x in cur:
+    print(x)`],
+["Create a table","Connect to the database by adding database=school in connect.",r`cur.execute("""
+CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255),
+    city VARCHAR(255)
+)""")`]
+],
+mysql_crud:[
+["Insert","Use placeholders so values are escaped safely, and commit to save.",r`sql = "INSERT INTO students (name, city) VALUES (%s, %s)"
+cur.execute(sql, ("Asha", "Pune"))
+cur.executemany(sql, [("Ravi", "Mumbai"), ("Meena", "Delhi")])
+db.commit()
+print(cur.lastrowid, cur.rowcount)`],
+["Select, where, order, limit","",r`cur.execute("SELECT * FROM students")
+print(cur.fetchall())
+
+cur.execute("SELECT name FROM students WHERE city = %s", ("Pune",))
+print(cur.fetchone())
+
+cur.execute("SELECT * FROM students ORDER BY name DESC LIMIT 2")`],
+["Update, delete, drop","",r`cur.execute("UPDATE students SET city = %s WHERE name = %s", ("Nashik", "Asha"))
+cur.execute("DELETE FROM students WHERE name = %s", ("Ravi",))
+db.commit()
+cur.execute("DROP TABLE IF EXISTS students")`],
+["Join","Combine two tables on a shared column.",r`cur.execute("""
+SELECT s.name, m.subject
+FROM students s
+JOIN marks m ON s.id = m.student_id
+""")`],
+["Never build SQL with plain string joining","Putting user text directly into the SQL string allows SQL injection. Always pass values separately with placeholders.",""]
+],
+mongo_start:[
+["Connect","Install with pip install pymongo. MongoDB creates databases and collections the first time you store something in them.",r`from pymongo import MongoClient
+client = MongoClient("mongodb://localhost:27017/")
+db = client["mydatabase"]
+col = db["customers"]
+print(client.list_database_names())`],
+["Insert a document","",r`doc = {"name": "Asha", "address": "Pune"}
+res = col.insert_one(doc)
+print(res.inserted_id)`]
+],
+mongo_crud:[
+["Insert many","",r`col.insert_many([
+    {"name": "Ravi", "age": 25},
+    {"name": "Meena", "age": 22},
+])`],
+["Find","",r`print(col.find_one())
+for d in col.find({}, {"_id": 0, "name": 1}):
+    print(d)
+
+print(list(col.find({"age": {"$gt": 23}})))     # greater than
+print(list(col.find({"name": {"$regex": "^R"}})))`],
+["Sort and limit","",r`for d in col.find().sort("name", 1).limit(5):    # 1 ascending, -1 descending
+    print(d)`],
+["Update","",r`col.update_one({"name": "Ravi"}, {"$set": {"age": 26}})
+col.update_many({"age": {"$lt": 23}}, {"$set": {"group": "young"}})`],
+["Delete and drop","",r`col.delete_one({"name": "Ravi"})
+col.delete_many({"age": {"$lt": 20}})
+col.drop()`]
+],
+ref_builtin:[
+["Most used built-in functions","len, type, print, input, range, enumerate, zip, map, filter, sorted, reversed, sum, min, max, abs, round, pow, any, all, isinstance, id, dir, help, open, int, float, str, bool, list, tuple, set, dict.",""],
+["Examples","",r`print(any([0, 0, 1]), all([1, 1, 0]))
+print(list(zip([1, 2], ["a", "b"])))
+print(list(map(str.upper, ["a", "b"])))
+print(list(filter(None, [0, 1, "", "x"])))
+print(sorted("hello"), list(reversed([1, 2, 3])))
+print(isinstance(5, (int, float)))`]
+],
+ref_string:[
+["Case and whitespace","upper, lower, title, capitalize, swapcase, casefold, strip, lstrip, rstrip, center, ljust, rjust, zfill.",""],
+["Search and replace","find, rfind, index, count, replace, startswith, endswith, partition, split, rsplit, splitlines, join.",""],
+["Tests","isalpha, isdigit, isalnum, isnumeric, isspace, isupper, islower, istitle, isidentifier.",""],
+["Examples","",r`print("42".zfill(5))                 # 00042
+print("a-b-c".partition("-"))       # ('a', '-', 'b-c')
+print("Hello".center(11, "*"))       # ***Hello***
+print("one two".title())`]
+],
+ref_collections:[
+["List","append, extend, insert, remove, pop, clear, index, count, sort, reverse, copy.",""],
+["Tuple","count and index only.",""],
+["Set","add, update, remove, discard, pop, clear, copy, union, intersection, difference, symmetric_difference, issubset, issuperset, isdisjoint.",""],
+["Dictionary","get, keys, values, items, update, pop, popitem, setdefault, clear, copy, fromkeys.",r`d = dict.fromkeys(["a", "b"], 0)
+print(d)    # {'a': 0, 'b': 0}`]
+],
+ref_other:[
+["Keywords","False None True and as assert async await break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield.",""],
+["Common exceptions","ArithmeticError, AssertionError, AttributeError, EOFError, FileNotFoundError, ImportError, IndexError, KeyError, KeyboardInterrupt, NameError, OSError, RuntimeError, StopIteration, SyntaxError, IndentationError, TypeError, ValueError, ZeroDivisionError.",""],
+["File methods","close, read, readline, readlines, write, writelines, seek, tell, flush, truncate, readable, writable.",""]
+],
+ref_modules:[
+["random","",r`import random
+print(random.randint(1, 6))
+print(random.choice(["a", "b"]))
+items = [1, 2, 3, 4]
+random.shuffle(items)
+print(random.sample(items, 2), random.uniform(1, 2))
+random.seed(1)       # repeatable results`],
+["requests","pip install requests.",r`import requests
+r = requests.get("https://api.github.com")
+print(r.status_code)
+print(r.headers["content-type"])
+data = r.json()
+r2 = requests.post("https://httpbin.org/post", json={"a": 1}, timeout=10)`],
+["statistics","",r`import statistics as st
+d = [2, 4, 4, 4, 5, 5, 7, 9]
+print(st.mean(d), st.median(d), st.mode(d), st.stdev(d))`],
+["math and cmath","See the Math topic. cmath is for complex numbers such as cmath.sqrt(-4).",""]
+],
+howto:[
+["Remove duplicates from a list","dict.fromkeys keeps the original order. set does not.",r`nums = [1, 2, 2, 3, 1]
+print(list(dict.fromkeys(nums)))   # [1, 2, 3]
+print(list(set(nums)))`],
+["Reverse a string","",r`s = "Python"
+print(s[::-1])                    # nohtyP
+print("".join(reversed(s)))`],
+["Add two numbers","",r`a = float(input("First: "))
+b = float(input("Second: "))
+print("Sum =", a + b)`]
+],
+interview:[
+["List vs tuple, set vs dict","List is ordered and changeable. Tuple is ordered and fixed, so it can be a dict key. Set is unordered and unique. Dict maps keys to values.",""],
+["is vs ==","== compares values. is checks whether two names refer to the same object.",""],
+["Shallow vs deep copy","A shallow copy duplicates the outer container but shares nested objects. A deep copy duplicates everything.",r`import copy
+a = [[1, 2], [3]]
+b = copy.copy(a)
+c = copy.deepcopy(a)
+a[0].append(99)
+print(b[0], c[0])   # b changed, c did not`],
+["args and kwargs","*args collects extra positional arguments into a tuple. **kwargs collects extra keyword arguments into a dictionary.",""],
+["Decorators","A decorator is a function that takes a function and returns a wrapped version.",r`def timer(fn):
+    def wrapper(*a, **k):
+        print("calling", fn.__name__)
+        return fn(*a, **k)
+    return wrapper
+
+@timer
+def hi():
+    print("hi")
+hi()`],
+["Generators","A function using yield produces values one at a time and keeps its state between them, saving memory.",""],
+["GIL","The Global Interpreter Lock lets only one thread run Python bytecode at a time in CPython. Use multiprocessing for CPU-heavy parallel work and threads or asyncio for waiting on input and output.",""],
+["List comprehension vs generator expression","Square brackets build the whole list at once. Round brackets give a lazy generator.",r`a = [n * n for n in range(5)]
+g = (n * n for n in range(5))`],
+["Mutable default arguments","Never use a list or dict as a default value, because it is created once and reused. Use None and create it inside the function.",""]
+]
+};
+const GROUPS=[
+['Python Tutorial',['intro','start','syntax','output','comments','variables','datatypes','numbers','casting','strings','booleans','operators','lists','tuples','sets','dictionaries','ifelse','match','while','for','functions','lambda','range','arrays','iterators','modules','dates','math','json','regex','pip','tryexcept','strfmt','none','userinput','venv']],
+['Python Classes',['oop','classes','classprops','classmethods','magic','inheritance','polymorphism','encapsulation','inner']],
+['File Handling',['files','readfiles','writefiles','deletefiles']],
+['Python Modules',['numpy','pandas','scipy','django']],
+['Matplotlib',['mpl_basics','mpl_charts']],
+['Machine Learning',['ml_stats','ml_regression','ml_prep','ml_models']],
+['Python DSA',['dsa_arrays','dsa_stacksqueues','dsa_linked','dsa_hash','dsa_trees','dsa_graphs','dsa_search','dsa_sort_simple','dsa_sort_fast']],
+['Python MySQL',['mysql_start','mysql_crud']],
+['Python MongoDB',['mongo_start','mongo_crud']],
+['Python Reference',['ref_builtin','ref_string','ref_collections','ref_other','ref_modules']],
+['How To and Practice',['howto','interview']]
+];
+(function(){
+  const all=[...T,...NEW];
+  T.length=0;
+  GROUPS.forEach(g=>g[1].forEach(id=>{const x=all.find(y=>y.id===id);if(x){T.push(x);BYID[id]=x}}));
+  Object.assign(D,D2);
+  const AX={
+    classes:[['init','The init method sets up each new object'],['self','Refers to the object the method is working on']],
+    inheritance:[['super','Calls the parent class']]
+  };
+})();
+
+/* ---------- State ---------- */
+const DEF={topics:{},settings:{time:'08:00',goal:3,remind:false,dark:false,lastNotified:''},log:{}};
+let S=load();
+function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r)return{topics:r.topics||{},settings:Object.assign({},DEF.settings,r.settings),log:r.log||{}}}catch(e){}return JSON.parse(JSON.stringify(DEF))}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function ts(id){return S.topics[id]||(S.topics[id]={status:'new',level:0,due:'',pad:'',custom:'',last:'',history:[]})}
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function dstr(d){const z=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())}
+const today=()=>dstr(new Date());
+function addDays(n){const d=new Date();d.setDate(d.getDate()+n);return dstr(d)}
+let view='today',cur=null,tab='notes',fc={i:0,flip:false,order:[]},transcript='',listening=false,recog=null,lastResult=null;
+
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2600)}
+
+/* ---------- Study logic ---------- */
+function isDue(id){const t=ts(id);return t.status==='again'||(t.status==='understood'&&t.due&&t.due<=today())}
+function plan(){
+  const due=T.filter(x=>isDue(x.id));
+  const fresh=T.filter(x=>ts(x.id).status==='new').slice(0,Math.max(0,S.settings.goal-0));
+  return{due,fresh};
+}
+function mark(id,ok){
+  const t=ts(id);t.last=today();S.log[today()]=true;
+  if(ok){t.status='understood';t.level=Math.min(t.level+1,INT.length);t.due=addDays(INT[t.level-1]);toast('Great! Next review in '+INT[t.level-1]+' day(s).')}
+  else{t.status='again';t.level=0;t.due=today();toast('Okay, it stays in your daily list until you understand it.')}
+  save();render();
+}
+function streak(){let n=0,d=new Date();if(!S.log[dstr(d)])d.setDate(d.getDate()-1);while(S.log[dstr(d)]){n++;d.setDate(d.getDate()-1)}return n}
+
+/* ---------- Scoring voice / typed explanation against notes ---------- */
+const STOP=new Set('that this with from have will your they them then than into when what which where while also only each such been being does done just like make made more most some very the and for are but not you all can its was were has had how use used using uses lets let'.split(' '));
+const norm=s=>String(s).toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+function evaluate(id,text){
+  const topic=BYID[id],toks=norm(text).split(' ').filter(Boolean),set=new Set(toks);
+  const hit=w=>w.length<=4?set.has(w):toks.some(t=>t.startsWith(w.slice(0,w.length-2)));
+  const rows=topic.p.map(([term,def])=>{
+    const tw=norm(term).split(' ');
+    const termHit=tw.every(hit);
+    const sig=[...new Set(norm(def).split(' ').filter(w=>w.length>3&&!STOP.has(w)))];
+    const ratio=sig.length?sig.filter(hit).length/sig.length:0;
+    const sc=(termHit?0.5:0)+0.5*Math.min(1,ratio/0.45);
+    return{term,def,termHit,sc};
+  });
+  let score=rows.reduce((a,r)=>a+r.sc,0)/rows.length*100;
+  const t=ts(id);
+  if(t.custom&&t.custom.trim().length>30){
+    const ct=[...new Set(norm(t.custom).split(' ').filter(w=>w.length>4&&!STOP.has(w)))];
+    if(ct.length){const r=ct.filter(hit).length/ct.length;score=score*0.75+Math.min(1,r/0.35)*100*0.25}
+  }
+  if(toks.length<20)score*=0.6+0.4*toks.length/20;
+  score=Math.round(Math.max(0,Math.min(100,score)));
+  const stars=score>=80?5:score>=60?4:score>=40?3:score>=20?2:1;
+  return{score,stars,words:toks.length,got:rows.filter(r=>r.sc>=0.6),part:rows.filter(r=>r.sc>=0.3&&r.sc<0.6),miss:rows.filter(r=>r.sc<0.3)};
+}
+
+/* ---------- Rendering ---------- */
+function renderList(){
+  const q=norm($('#q').value||'');
+  const row=x=>{const t=ts(x.id),due=isDue(x.id);return `<div class="item ${view==='topic'&&cur===x.id?'cur':''}" data-a="open" data-id="${x.id}"><span class="dot ${t.status}"></span><span>${esc(x.t)}</span>${due?'<small title="Due today">&#128276;</small>':''}</div>`};
+  const html=GROUPS.map(([g,ids])=>{const xs=ids.map(i=>BYID[i]).filter(x=>x&&(!q||norm(x.t+' '+x.s+' '+g).includes(q)));return xs.length?`<div class="grp">${esc(g)}</div>`+xs.map(row).join(''):''}).join('');
+  $('#list').innerHTML=html||'<p class="mute">No topics match.</p>';
+}
+function render(){document.body.classList.toggle('dark',!!S.settings.dark);renderList();
+  $('#main').innerHTML=view==='today'?vToday():view==='dash'?vDash():vTopic();
+  if(view==='topic'&&tab==='cards')drawCard();
+}
+function item(x){const t=ts(x.id);return `<div class="item" data-a="open" data-id="${x.id}"><span class="dot ${t.status}"></span><b>${esc(x.t)}</b><small>${t.last===today()?'&#10003; read today':t.status}</small></div>`}
+function vToday(){
+  const{due,fresh}=plan();const done=T.filter(x=>ts(x.id).last===today()).length;
+  const nextId=(due[0]||fresh[0]||{}).id;
+  return `<div class="card"><h2>Today's reading</h2><p class="mute">${new Date().toDateString()} &middot; &#128293; ${streak()} day streak &middot; ${done} topic(s) read today</p>
+  ${nextId?`<button class="pri" data-a="open" data-id="${nextId}">Start reading</button>`:'<p>&#127881; Nothing due. Add more topics from the left or come back tomorrow.</p>'}</div>
+  <div class="card"><h3>&#128260; To revise (${due.length})</h3>${due.map(item).join('')||'<p class="mute">Nothing to revise yet.</p>'}</div>
+  <div class="card"><h3>&#127381; New topics for today (${fresh.length})</h3>${fresh.map(item).join('')||'<p class="mute">You have started every topic.</p>'}</div>`;
+}
+function vTopic(){
+  const x=BYID[cur];if(!x)return '';const t=ts(cur);
+  const tabs=[['notes','&#128214; Notes'],['pad','&#128221; Notepad'],['explain','&#127908; Explain &amp; rate'],['cards','&#127183; Flashcards']];
+  let body='';
+  if(tab==='notes')body=`<div class="card"><p>${esc(x.s)}</p><h3>Key points</h3><ul class="pts">${x.p.map(([a,b])=>`<li><b>${esc(a)}</b> - ${esc(b)}</li>`).join('')}</ul>
+   <div class="row"><button data-a="speak">&#128266; Listen</button><a class="btn" target="_blank" rel="noopener" href="${x.u?(x.u.indexOf('http')===0?x.u:W+x.u):W}">Open full W3Schools page &#8599;</a></div></div>
+   ${detail(x.id)}<div class="card"><h3>My notes from W3Schools</h3><p class="mute">Paste or type the parts you want to remember. The app also uses these when it checks your explanation.</p><textarea data-f="custom" placeholder="Paste your notes here...">${esc(t.custom)}</textarea></div>`;
+  if(tab==='pad')body=`<div class="card"><h3>Notepad for ${esc(x.t)}</h3><p class="mute">Saved automatically in this browser.</p><textarea data-f="pad" style="min-height:320px" placeholder="Write your own examples, doubts, code snippets...">${esc(t.pad)}</textarea></div>`;
+  if(tab==='explain')body=vExplain(x,t);
+  if(tab==='cards')body=`<div class="card"><h3>Flashcards</h3><div id="card"></div><div class="row" style="margin-top:10px"><button data-a="fprev">&larr; Prev</button><button data-a="fflip">Flip</button><button data-a="fnext">Next &rarr;</button><button data-a="fshuf">Shuffle</button></div></div>`;
+  return `<div class="card"><div class="row"><div class="grow"><h2>${esc(x.t)}</h2><span class="badge ${t.status}">${t.status==='again'?'Study again':t.status==='understood'?'Understood':'New'}</span>
+    ${t.due&&t.status==='understood'?`<span class="mute"> next review ${esc(t.due)}</span>`:''}</div>
+    <button class="ok" data-a="mark" data-ok="1">&#10003; I understand it</button><button class="warn" data-a="mark" data-ok="0">&#8635; Need to study again</button></div></div>
+    <div class="tabs">${tabs.map(([k,l])=>`<button class="${tab===k?'on':''}" data-a="tab" data-t="${k}">${l}</button>`).join('')}</div>${body}`;
+}
+function vExplain(x,t){
+  const r=lastResult;
+  return `<div class="card"><h3>Explain ${esc(x.t)} in your own words</h3>
+  <p class="mute">Speak without looking at the notes, or type. Then press Check. ${SR?'':'<b>Voice input is not supported in this browser (use Chrome or Edge); you can type instead.</b>'}</p>
+  <div class="row" style="margin-bottom:8px">${SR?`<button id="micbtn" class="${listening?'bad rec':'pri'}" data-a="mic">${listening?'&#9209; Stop recording':'&#127908; Start recording'}</button>`:''}<button data-a="clear">Clear</button></div>
+  <textarea id="tr" data-f="transcript" placeholder="Your explanation will appear here...">${esc(transcript)}</textarea>
+  <div class="row" style="margin-top:8px"><button class="pri" data-a="check">Check my understanding</button></div></div>
+  ${r?`<div class="card"><div class="stars">${'&#9733;'.repeat(r.stars)}${'&#9734;'.repeat(5-r.stars)}</div><h3>${r.score}% match with the notes (${r.words} words)</h3>
+   ${r.got.length?`<p><b style="color:var(--ok)">Explained well:</b> ${r.got.map(a=>esc(a.term)).join(', ')}</p>`:''}
+   ${r.part.length?`<p><b style="color:var(--warn)">Partly covered:</b></p><ul class="pts">${r.part.map(a=>`<li><b>${esc(a.term)}</b> - ${esc(a.def)}</li>`).join('')}</ul>`:''}
+   ${r.miss.length?`<p><b style="color:var(--bad)">Missed - revise these:</b></p><ul class="pts">${r.miss.map(a=>`<li><b>${esc(a.term)}</b> - ${esc(a.def)}</li>`).join('')}</ul>`:''}
+   <p class="mute">This is a keyword-and-meaning match against the notes, not a full AI judgement. Say the key terms and their meaning to score higher.</p></div>`:''}
+  ${t.history.length?`<div class="card"><h3>Past attempts</h3><table><tr><th>Date</th><th>Score</th><th>Rating</th></tr>${t.history.slice(-8).reverse().map(h=>`<tr><td>${esc(h.d)}</td><td>${h.score}%</td><td>${'&#9733;'.repeat(h.stars)}</td></tr>`).join('')}</table></div>`:''}`;
+}
+function vDash(){
+  const n=T.length,u=T.filter(x=>ts(x.id).status==='understood').length,a=T.filter(x=>ts(x.id).status==='again').length;
+  const pct=Math.round(u/n*100);
+  const rated=T.filter(x=>ts(x.id).history.length);
+  return `<div class="card"><h2>Progress</h2><div class="grid">
+   <div class="stat"><b>${u}</b>understood</div><div class="stat"><b>${a}</b>study again</div><div class="stat"><b>${n-u-a}</b>not started</div><div class="stat"><b>${streak()}</b>day streak</div></div>
+   <p class="mute">${pct}% of ${n} topics understood</p><div class="bar"><i style="width:${pct}%"></i></div></div>
+  <div class="card"><h3>Daily reminder</h3>
+   <div class="row"><label>Time <input type="time" id="rtime" value="${esc(S.settings.time)}"></label>
+   <label>New topics/day <input type="number" id="goal" min="0" max="10" value="${S.settings.goal}" style="width:70px"></label>
+   <label><input type="checkbox" id="remind" ${S.settings.remind?'checked':''}> Notify me</label></div>
+   <div class="row" style="margin-top:8px"><button data-a="saveset" class="pri">Save</button><button data-a="ics">&#128197; Add daily event to my calendar (.ics)</button></div>
+   <p class="mute">Browser notifications only fire while this page is open in a tab. For a reminder that works when the browser is closed, also add the calendar event.</p></div>
+  <div class="card"><h3>Quiz scores</h3>${rated.length?`<table><tr><th>Topic</th><th>Best</th><th>Latest</th></tr>${rated.map(x=>{const h=ts(x.id).history;return `<tr><td>${esc(x.t)}</td><td>${Math.max(...h.map(i=>i.score))}%</td><td>${h[h.length-1].score}%</td></tr>`}).join('')}</table>`:'<p class="mute">No explanations checked yet.</p>'}</div>
+  <div class="card"><h3>Backup</h3><div class="row"><button data-a="export">Export my data</button><label class="btn">Import<input type="file" id="imp" accept=".json" hidden></label><button class="bad" data-a="reset">Reset everything</button></div>
+  <p class="mute">Your data lives only in this browser. Export a backup now and then.</p></div>`;
+}
+
+/* ---------- Flashcards ---------- */
+function drawCard(){
+  const x=BYID[cur];if(!fc.order.length||fc.id!==cur){fc={id:cur,i:0,flip:false,order:x.p.map((_,i)=>i)}}
+  const p=x.p[fc.order[fc.i]];
+  $('#card').innerHTML=`<p class="mute">Card ${fc.i+1} of ${x.p.length}</p><div class="flash" data-a="fflip">${fc.flip?esc(p[1]):'What is "'+esc(p[0])+'" in Python?'}</div>`;
+}
+
+/* ---------- Voice ---------- */
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+function startMic(){
+  if(!SR)return;
+  recog=new SR();recog.lang='en-IN';recog.continuous=true;recog.interimResults=true;
+  const base=transcript?transcript.trim()+' ':'';let fin='';
+  recog.onresult=e=>{let tmp='';for(let i=e.resultIndex;i<e.results.length;i++){const r=e.results[i];if(r.isFinal)fin+=r[0].transcript+' ';else tmp+=r[0].transcript}
+    transcript=base+fin+tmp;const ta=$('#tr');if(ta)ta.value=transcript};
+  recog.onerror=e=>{toast('Mic problem: '+e.error+(e.error==='not-allowed'?' (allow microphone access)':''));listening=false;render()};
+  recog.onend=()=>{if(listening){try{recog.start()}catch(e){}}};
+  listening=true;try{recog.start()}catch(e){}render();
+}
+function stopMic(){listening=false;try{recog&&recog.stop()}catch(e){}render()}
+
+/* ---------- Reminder ---------- */
+function remindNow(){
+  const{due,fresh}=plan();const n=due.length+fresh.length;
+  const msg=n?`${due.length} to revise, ${fresh.length} new. Time for your Python notes!`:'No topics due, but a quick review helps.';
+  if('Notification' in window&&Notification.permission==='granted'){try{new Notification('PyDaily',{body:msg})}catch(e){}}
+  toast(msg);
+}
+function checkReminder(){
+  if(!S.settings.remind)return;const hm=new Date().toTimeString().slice(0,5);
+  if(hm>=S.settings.time&&S.settings.lastNotified!==today()){S.settings.lastNotified=today();save();remindNow()}
+}
+function makeIcs(){
+  const [h,m]=S.settings.time.split(':');const d=new Date();const z=n=>String(n).padStart(2,'0');
+  const ds=d.getFullYear()+z(d.getMonth()+1)+z(d.getDate())+'T'+h+m+'00';
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//PyDaily//EN','BEGIN:VEVENT','UID:pydaily-daily@local','DTSTAMP:'+ds,'DTSTART:'+ds,'DURATION:PT20M','RRULE:FREQ=DAILY','SUMMARY:Read my Python notes (PyDaily)','BEGIN:VALARM','TRIGGER:PT0M','ACTION:DISPLAY','DESCRIPTION:Daily Python revision','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+  download('pydaily-reminder.ics',ics,'text/calendar');
+}
+function download(name,data,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+
+/* ---------- Events ---------- */
+document.addEventListener('click',async e=>{
+  const el=e.target.closest('[data-a]');if(!el)return;const a=el.dataset.a;
+  if(a==='menu'){$('#side').classList.toggle('open');return}
+  if(a==='dark'){S.settings.dark=!S.settings.dark;save();render();return}
+  if(a==='view'){view=el.dataset.v;$('#side').classList.remove('open');if(listening)stopMic();render();return}
+  if(a==='open'){if(listening)stopMic();view='topic';cur=el.dataset.id;tab='notes';lastResult=null;transcript='';$('#side').classList.remove('open');render();scrollTo(0,0);return}
+  if(a==='tab'){if(listening)stopMic();tab=el.dataset.t;render();return}
+  if(a==='mark'){mark(cur,el.dataset.ok==='1');return}
+  if(a==='speak'){const x=BYID[cur];speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(x.t+'. '+x.s+' '+x.p.map(p=>p[0]+': '+p[1]).join('. '));u.lang='en-IN';speechSynthesis.speak(u);return}
+  if(a==='mic'){listening?stopMic():startMic();return}
+  if(a==='clear'){transcript='';lastResult=null;render();return}
+  if(a==='check'){
+    if(listening)stopMic();
+    if(norm(transcript).length<5){toast('Explain the topic first (speak or type).');return}
+    lastResult=evaluate(cur,transcript);const t=ts(cur);t.history.push({d:today(),score:lastResult.score,stars:lastResult.stars});S.log[today()]=true;save();render();return}
+  if(a==='fflip'){fc.flip=!fc.flip;drawCard();return}
+  if(a==='fnext'){fc.i=(fc.i+1)%fc.order.length;fc.flip=false;drawCard();return}
+  if(a==='fprev'){fc.i=(fc.i-1+fc.order.length)%fc.order.length;fc.flip=false;drawCard();return}
+  if(a==='fshuf'){fc.order.sort(()=>Math.random()-.5);fc.i=0;fc.flip=false;drawCard();return}
+  if(a==='saveset'){
+    S.settings.time=$('#rtime').value||'08:00';S.settings.goal=Math.max(0,Math.min(10,+$('#goal').value||0));S.settings.remind=$('#remind').checked;S.settings.lastNotified='';
+    if(S.settings.remind&&'Notification' in window&&Notification.permission==='default'){await Notification.requestPermission()}
+    save();toast('Saved'+(S.settings.remind&&'Notification' in window&&Notification.permission==='denied'?' (notifications are blocked in browser settings)':''));render();return}
+  if(a==='ics'){S.settings.time=$('#rtime').value||S.settings.time;save();makeIcs();return}
+  if(a==='export'){download('pydaily-backup.json',JSON.stringify(S,null,1),'application/json');return}
+  if(a==='reset'){if(confirm('Delete all progress and notes?')){S=JSON.parse(JSON.stringify(DEF));save();render()}return}
+});
+document.addEventListener('input',e=>{
+  const f=e.target.dataset&&e.target.dataset.f;
+  if(f==='transcript'){transcript=e.target.value;return}
+  if(f==='pad'||f==='custom'){ts(cur)[f]=e.target.value;save()}
+});
+document.addEventListener('change',e=>{
+  if(e.target.id==='imp'){const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);S={topics:d.topics||{},settings:Object.assign({},DEF.settings,d.settings),log:d.log||{}};save();render();toast('Imported')}catch(x){toast('Not a valid backup file')}};r.readAsText(e.target.files[0])}
+});
+$('#q').addEventListener('input',renderList);
+setInterval(checkReminder,30000);
+render();checkReminder();
+</script>
+</body>
+</html>
