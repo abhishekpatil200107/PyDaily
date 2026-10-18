@@ -1,0 +1,23 @@
+{
+ "name": "PyDaily - Python Notes Tracker",
+ "short_name": "PyDaily",
+ "start_url": "pydaily.html",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#f6f7fb",
+ "theme_color": "#3b6cf6",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png",
+   "purpose": "any maskable"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  }
+ ]
+}

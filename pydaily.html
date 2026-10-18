@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#3b6cf6">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>PyDaily - Python Notes Tracker</title>
 <style>
@@ -59,9 +64,71 @@ table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1p
  #menu{display:inline-block}
  main{padding:12px}
 }
+.cb code:focus{outline:1px dashed var(--pri)}.cb .row{margin:-4px 0 8px}.out{white-space:pre-wrap;border-color:var(--ok)}.out.err{border-color:var(--bad);color:var(--bad)}
+.hm{display:grid;grid-template-rows:repeat(7,14px);grid-auto-flow:column;gap:3px;overflow:auto;padding-bottom:4px}.hc{width:14px;height:14px;border-radius:3px;background:var(--line)}.hc.h1{background:var(--ok);opacity:.55}.hc.h2{background:var(--ok)}.tag{font-size:11px;padding:1px 7px;border-radius:99px;background:var(--pri);color:var(--pri-ink)}
 pre{background:var(--soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px;overflow:auto;margin:6px 0 12px;font:13px/1.5 ui-monospace,Consolas,monospace}
 h4{margin:16px 0 4px;font-size:15px;color:var(--pri)}
 .grp{margin:12px 6px 4px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--mute)}
+
+body{font-size:15.5px;letter-spacing:.005em}
+header{backdrop-filter:blur(10px);background:color-mix(in srgb,var(--card) 88%,transparent);box-shadow:0 1px 10px rgba(20,30,60,.06)}
+header h1{background:linear-gradient(90deg,var(--pri),#8b5cf6);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+.card{border-radius:16px;box-shadow:0 1px 3px rgba(20,30,60,.05),0 6px 18px rgba(20,30,60,.04);transition:box-shadow .2s,transform .2s}
+.card:hover{box-shadow:0 4px 22px rgba(59,108,246,.12)}
+button,.btn{border-radius:10px;transition:transform .08s,background .15s,border-color .15s,box-shadow .15s}
+button:active,.btn:active{transform:scale(.97)}
+button:focus-visible,.btn:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+button.pri{background:linear-gradient(135deg,var(--pri),#7c5cf6);border:0;box-shadow:0 3px 10px rgba(59,108,246,.3)}
+.tabs button{border-radius:99px;padding:7px 14px}
+.grp{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mute);margin:14px 6px 4px;font-weight:700}
+.item{transition:background .15s,transform .15s}.item:hover{transform:translateX(2px)}
+.bar{height:10px;border-radius:99px;overflow:hidden}.bar i{border-radius:99px;transition:width .5s}
+.stat{border-radius:14px;transition:transform .2s}.stat:hover{transform:translateY(-2px)}
+pre{border-radius:12px;font-size:13.5px}
+::-webkit-scrollbar{width:9px;height:9px}::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+main{animation:fi .25s ease}@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(max-width:760px){main{padding:12px}.card{padding:13px}h2{font-size:19px}}
+@media print{header,aside,.tabs,button{display:none!important}.layout{display:block}}
+
+/* ===== Stylish theme v3 ===== */
+:root{--bg:#f3f4ff;--card:#fff;--ink:#1a1f36;--mute:#6a7391;--line:#e5e7f6;--pri:#6366f1;--soft:#eef0ff;--grad:linear-gradient(135deg,#6366f1,#8b5cf6 55%,#ec4899)}
+body.dark{--bg:#0a0e1d;--card:#131a2e;--ink:#e9ecfa;--mute:#98a2c3;--line:#262f4d;--pri:#818cf8;--soft:#1a2240;--pri-ink:#0b1020}
+body{background:radial-gradient(900px 500px at 10% -10%,rgba(99,102,241,.14),transparent),radial-gradient(800px 500px at 100% 0,rgba(236,72,153,.10),transparent),var(--bg);background-attachment:fixed}
+header{border-bottom:0}header h1{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:20px}
+aside{background:color-mix(in srgb,var(--card) 82%,transparent);backdrop-filter:blur(12px)}
+aside input{border-radius:99px;padding:10px 16px;background:var(--soft);border-color:transparent}
+.nav button{border-radius:12px;background:var(--soft);border-color:transparent;font-weight:600}
+.item{border-left:3px solid transparent;border-radius:10px}
+.item.cur{background:linear-gradient(90deg,color-mix(in srgb,var(--pri) 20%,transparent),transparent);outline:0;border-left-color:var(--pri)}
+.dot{width:11px;height:11px}.dot.understood{box-shadow:0 0 0 3px color-mix(in srgb,var(--ok) 28%,transparent)}.dot.again{box-shadow:0 0 0 3px color-mix(in srgb,var(--warn) 28%,transparent)}
+.grp{color:var(--pri);margin-top:16px}
+.card{border-color:color-mix(in srgb,var(--line) 70%,transparent)}
+button.pri,.tabs button.on{background:var(--grad);color:#fff;border:0;box-shadow:0 6px 16px rgba(99,102,241,.32)}
+.tabs{background:var(--soft);padding:5px;border-radius:99px;display:inline-flex;max-width:100%;overflow-x:auto}
+.tabs button{border:0;background:transparent}
+.stat{background:var(--soft);border:1px solid var(--line);border-radius:16px}.stat b{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent;font-size:30px}
+.bar>i{background:var(--grad)}
+.badge{padding:3px 11px;font-weight:600}
+h4{display:inline-block;background:var(--soft);padding:2px 10px;border-radius:8px}
+pre{background:#0f172a;color:#e2e8f0;border:1px solid #1e293b;box-shadow:inset 0 1px 0 rgba(255,255,255,.05)}.out{color:#86efac}.out.err{color:#fca5a5}
+.flash{border:0;background:var(--grad);color:#fff;font-weight:600;box-shadow:0 12px 30px rgba(99,102,241,.3);transition:transform .2s}.flash:hover{transform:scale(1.015)}
+textarea,input[type=time],input[type=number]{border-radius:12px;background:var(--soft);border-color:transparent}
+textarea:focus{background:var(--card)}
+.hero{display:flex;gap:18px;align-items:center;justify-content:space-between;padding:26px;border-radius:24px;color:#fff;background:var(--grad);box-shadow:0 16px 44px rgba(99,102,241,.38);margin-bottom:16px;position:relative;overflow:hidden}
+.hero:before{content:"";position:absolute;right:-60px;top:-90px;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.14)}
+.hero:after{content:"";position:absolute;left:30%;bottom:-120px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hl,.ring{position:relative;z-index:1}.hero h2{font-size:27px;margin:2px 0 6px}.hero p{margin:0}
+.eyebrow{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}.chip{background:rgba(255,255,255,.2);padding:5px 12px;border-radius:99px;font-size:13px;backdrop-filter:blur(6px)}
+.cta{background:#fff;color:#4f46e5;border:0;font-weight:700;padding:11px 20px;border-radius:14px;box-shadow:0 8px 20px rgba(0,0,0,.2)}.cta:hover{transform:translateY(-1px)}
+.ring{--p:0;width:124px;height:124px;border-radius:50%;flex:none;display:grid;place-content:center;text-align:center;background:radial-gradient(closest-side,#3b2f9a 79%,transparent 81%),conic-gradient(#fff calc(var(--p)*1%),rgba(255,255,255,.25) 0)}
+.ring b{font-size:27px;display:block}.ring small{font-size:11px;opacity:.85}
+main>*{animation:up .45s both}main>*:nth-child(2){animation-delay:.06s}main>*:nth-child(3){animation-delay:.12s}main>*:nth-child(4){animation-delay:.18s}main>*:nth-child(n+5){animation-delay:.24s}
+@keyframes up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#bn{display:none;position:fixed;left:10px;right:10px;bottom:10px;z-index:8;background:color-mix(in srgb,var(--card) 90%,transparent);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px;box-shadow:0 12px 32px rgba(20,20,60,.22);padding:6px;gap:4px}
+#bn button{flex:1;border:0;background:transparent;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px;border-radius:16px}#bn button span{font-size:19px}
+@media(max-width:800px){#bn{display:flex}main{padding-bottom:96px}#toast{bottom:90px}aside{top:54px;bottom:0;padding-bottom:90px}}
+@media(max-width:560px){.hero{flex-direction:column-reverse;align-items:flex-start;padding:20px}.ring{align-self:flex-end;width:100px;height:100px}.hero h2{font-size:22px}}
 </style>
 </head>
 <body>
@@ -82,6 +149,7 @@ h4{margin:16px 0 4px;font-size:15px;color:var(--pri)}
   <main id="main"></main>
 </div>
 <div id="toast"></div>
+<nav id="bn"><button data-a="view" data-v="today"><span>&#127968;</span>Today</button><button data-a="menu"><span>&#128218;</span>Topics</button><button data-a="view" data-v="dash"><span>&#128202;</span>Progress</button><button data-a="dark"><span>&#127769;</span>Theme</button></nav>
 
 <script>
 /* ---------- Topic data (summaries are written in my own words; see W3Schools pages for the full tutorial) ---------- */
@@ -876,7 +944,7 @@ tryexcept:[['exception','Common ones are ValueError, TypeError, IndexError and K
 files:[['seek','Moves the reading position in the file'],['append mode','Mode a adds to the end without erasing'],['json','The json module reads and writes JSON files']]
 };
 T.forEach(x=>(X[x.id]||[]).forEach(e=>x.p.push(e)));
-function detail(id){const d=D[id]||[];return d.length?`<div class="card"><h3>Detailed notes</h3>${d.map(([h,t,c])=>`<h4>${esc(h)}</h4>${t?`<p>${esc(t)}</p>`:''}${c?`<pre><code>${esc(c)}</code></pre>`:''}`).join('')}</div>`:''}
+function detail(id){const d=D[id]||[];return d.length?`<div class="card"><h3>Detailed notes</h3>${d.map(([h,t,c])=>`<h4>${esc(h)}</h4>${t?`<p>${esc(t)}</p>`:''}${c?`<div class="cb"><pre><code contenteditable="true" spellcheck="false">${esc(c)}</code></pre><div class="row"><button data-a="copy">Copy</button><button class="pri" data-a="run">&#9654; Run</button><small class="mute">Editable. Runs in your browser (needs internet the first time).</small></div><pre class="out" hidden></pre></div>`:''}`).join('')}</div>`:''}
 
 /* ---------- Extra topics that mirror the W3Schools sidebar (notes are original) ---------- */
 const N=(id,t,u,s,p)=>({id,t,u,s,p});
@@ -2039,9 +2107,71 @@ g = (n * n for n in range(5))`],
 ["Mutable default arguments","Never use a list or dict as a default value, because it is created once and reused. Use None and create it inside the function.",""]
 ]
 };
+NEW.push(
+N('init','__init__ Method','python_class_init.asp','The __init__ method runs automatically when you create an object. It is the constructor and sets the starting values.',[['constructor','Runs every time an object is created from the class'],['parameters','Arguments after self are the values you pass when creating the object'],['attributes','Write self.name = name to store data on the object'],['defaults','Parameters can have default values'],['return','It should not return anything except None']]),
+N('self','self Parameter','python_class_self.asp','self is the first parameter of every instance method. It points to the current object so the method can reach its attributes and other methods.',[['current object','self is the object the method was called on'],['access','Use self.attr to read or change data of that object'],['name','self is only a convention, but everyone uses it'],['first','It must be listed first, Python passes it automatically'],['call methods','Use self.other_method() to call another method of the same object']]),
+N('random','Random Module','python_random.asp','The random module gives pseudo-random numbers and choices. It is fine for games and simulations but not for security.',[['random','random() returns a float from 0 up to but not including 1'],['randint','randint(a, b) returns a whole number including both ends'],['choice','choice picks one item from a sequence'],['shuffle','shuffle reorders a list in place'],['sample','sample picks several different items'],['seed','seed makes the sequence repeatable']]),
+N('requests','Requests Module','python_requests.asp','requests is a third-party library for sending HTTP requests. Install it with pip, then call get, post and similar functions.',[['get','requests.get(url) fetches a page or API'],['status code','response.status_code is 200 when the request worked'],['json','response.json() turns a JSON body into Python data'],['params','Pass a dict as params to build the query string'],['post','requests.post sends data to a server'],['timeout','Always set a timeout so a slow server cannot hang your program']]),
+N('statistics','Statistics Module','python_stat.asp','The statistics module calculates averages and spread for lists of numbers without needing NumPy.',[['mean','The average of the values'],['median','The middle value when sorted'],['mode','The most common value'],['stdev','Sample standard deviation, how spread out the data is'],['variance','The square of the standard deviation']]),
+N('cmath','cMath Module','python_cmath.asp','cmath is the math module for complex numbers. Use it when a result can have an imaginary part.',[['complex','A number like 3+4j, j is the imaginary unit'],['sqrt','cmath.sqrt of a negative number works'],['phase','The angle of a complex number'],['polar','Converts to magnitude and angle'],['math vs cmath','math raises an error for sqrt of a negative, cmath does not']]),
+N('overview','Python Overview','python_reference.asp','The reference section lists built-in functions, methods and keywords in one place so you can look things up quickly.',[['built-in functions','print, len, range, sorted and many more'],['methods','Each type (str, list, dict) has its own methods'],['keywords','Reserved words such as if, for, class, def'],['lookup','Use it to check what a name does and which arguments it takes']]),
+N('glossary','Python Glossary','python_ref_glossary.asp','A glossary of common Python terms. Knowing the vocabulary makes documentation and error messages easier to read.',[['iterable','Anything you can loop over'],['mutable','Can change after creation'],['hashable','Has a fixed value so it can be a dict key'],['module','A .py file you can import'],['package','A folder of modules'],['decorator','A function that wraps another function'],['exception','An error object raised while running']]),
+N('dedupe','Remove List Duplicates','python_howto_remove_duplicates.asp','Remove repeated items from a list. A dict keeps the original order, a set does not.',[['dict.fromkeys','Drops duplicates and keeps order'],['set','Fastest but loses order'],['list again','Wrap the result in list() to get a list back']]),
+N('reverse','Reverse a String','python_howto_reverse_string.asp','Strings have no reverse method, so slice with a step of minus one.',[['slice','text[::-1] reads the string backwards'],['reversed','"".join(reversed(text)) also works'],['immutable','The original string is not changed, you get a new one']]),
+N('addtwo','Add Two Numbers','python_howto_add_two_numbers.asp','Read two values, convert them to numbers, then add them.',[['input','input always returns text'],['convert','Use int or float before adding'],['plus','The + operator adds numbers but joins text'],['f-string','Show the result with an f-string']]),
+N('ex_examples','Examples, Compiler and Server','python_examples.asp','Practice by running small programs. The online compiler runs code in the browser and the server page shows how to start a simple web server.',[['examples','Short programs grouped by topic'],['compiler','An online editor to run code without installing Python'],['server','python -m http.server serves the current folder'],['habit','Type the code yourself instead of only reading it']]),
+N('ex_exercises','Exercises, Quiz and Challenges','python_exercises.asp','Test yourself with exercises, a quiz, challenges and practice problems. Fixing your own mistakes is where most learning happens.',[['exercises','Fill-in-the-blank tasks per topic'],['quiz','Multiple choice test of the basics'],['challenges','Harder problems that combine topics'],['practice problems','Real tasks to solve from scratch'],['review','Redo the ones you got wrong after a few days']]),
+N('studyplan','Syllabus, Study Plan and Certificate','python_syllabus.asp','The syllabus lists what to learn and the study plan spreads it over weeks. A certificate is available after passing the exam.',[['syllabus','The list of topics that the course covers'],['study plan','A week by week schedule'],['certificate','Awarded after an online exam'],['training','Guided courses for groups'],['consistency','Daily short sessions beat rare long ones']])
+);
+D2.init=[['Basic constructor','Set attributes when the object is created.',r`class Student:
+    def __init__(self, name, marks=0):
+        self.name = name
+        self.marks = marks
+
+s = Student("Asha", 82)
+print(s.name, s.marks)`]];
+D2.self=[['self in action','Each object has its own self, so the same method works on different data.',r`class Counter:
+    def __init__(self):
+        self.n = 0
+    def add(self):
+        self.n += 1
+        return self.n
+
+a, b = Counter(), Counter()
+a.add(); a.add(); b.add()
+print(a.n, b.n)`]];
+D2.random=[['Common functions','Run it several times to see different output.',r`import random
+print(random.random())
+print(random.randint(1, 6))
+print(random.choice(["red", "green", "blue"]))
+nums = [1, 2, 3, 4, 5]
+random.shuffle(nums)
+print(nums, random.sample(nums, 2))`]];
+D2.requests=[['GET request','Install first with pip install requests. This will not run in the browser box.',r`import requests
+r = requests.get("https://api.github.com", timeout=10)
+print(r.status_code)
+print(r.json()["current_user_url"])`]];
+D2.statistics=[['Averages and spread','',r`import statistics as st
+data = [2, 4, 4, 4, 5, 5, 7, 9]
+print(st.mean(data), st.median(data), st.mode(data))
+print(st.stdev(data), st.variance(data))`]];
+D2.cmath=[['Complex numbers','',r`import cmath
+z = 3 + 4j
+print(abs(z), cmath.phase(z))
+print(cmath.sqrt(-9))
+print(cmath.polar(z))`]];
+D2.dedupe=[['Keep order','',r`items = [3, 1, 3, 2, 1]
+print(list(dict.fromkeys(items)))
+print(list(set(items)))`]];
+D2.reverse=[['Slice with step -1','',r`text = "Python"
+print(text[::-1])
+print("".join(reversed(text)))`]];
+D2.addtwo=[['Add two numbers','',r`a = float("2.5")
+b = float("4")
+print(f"Sum = {a + b}")`]];
 const GROUPS=[
 ['Python Tutorial',['intro','start','syntax','output','comments','variables','datatypes','numbers','casting','strings','booleans','operators','lists','tuples','sets','dictionaries','ifelse','match','while','for','functions','lambda','range','arrays','iterators','modules','dates','math','json','regex','pip','tryexcept','strfmt','none','userinput','venv']],
-['Python Classes',['oop','classes','classprops','classmethods','magic','inheritance','polymorphism','encapsulation','inner']],
+['Python Classes',['oop','classes','init','self','classprops','classmethods','magic','inheritance','polymorphism','encapsulation','inner']],
 ['File Handling',['files','readfiles','writefiles','deletefiles']],
 ['Python Modules',['numpy','pandas','scipy','django']],
 ['Matplotlib',['mpl_basics','mpl_charts']],
@@ -2049,8 +2179,10 @@ const GROUPS=[
 ['Python DSA',['dsa_arrays','dsa_stacksqueues','dsa_linked','dsa_hash','dsa_trees','dsa_graphs','dsa_search','dsa_sort_simple','dsa_sort_fast']],
 ['Python MySQL',['mysql_start','mysql_crud']],
 ['Python MongoDB',['mongo_start','mongo_crud']],
-['Python Reference',['ref_builtin','ref_string','ref_collections','ref_other','ref_modules']],
-['How To and Practice',['howto','interview']]
+['Python Reference',['ref_builtin','ref_string','ref_collections','ref_other','overview','glossary']],
+['Module Reference',['ref_modules','random','requests','statistics','cmath']],
+['Python How To',['howto','dedupe','reverse','addtwo']],
+['Python Examples',['ex_examples','ex_exercises','studyplan','interview']]
 ];
 (function(){
   const all=[...T,...NEW];
@@ -2064,9 +2196,9 @@ const GROUPS=[
 })();
 
 /* ---------- State ---------- */
-const DEF={topics:{},settings:{time:'08:00',goal:3,remind:false,dark:false,lastNotified:''},log:{}};
+const DEF={proj:{},study:{},topics:{},settings:{time:'08:00',goal:3,remind:false,dark:false,lastNotified:''},log:{}};
 let S=load();
-function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r)return{topics:r.topics||{},settings:Object.assign({},DEF.settings,r.settings),log:r.log||{}}}catch(e){}return JSON.parse(JSON.stringify(DEF))}
+function load(){try{const r=JSON.parse(localStorage.getItem(KEY));if(r)return{proj:r.proj||{},study:r.study||{},topics:r.topics||{},settings:Object.assign({},DEF.settings,r.settings),log:r.log||{}}}catch(e){}return JSON.parse(JSON.stringify(DEF))}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 function ts(id){return S.topics[id]||(S.topics[id]={status:'new',level:0,due:'',pad:'',custom:'',last:'',history:[]})}
 const $=s=>document.querySelector(s);
@@ -2079,7 +2211,7 @@ let view='today',cur=null,tab='notes',fc={i:0,flip:false,order:[]},transcript=''
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.h);toast.h=setTimeout(()=>t.classList.remove('show'),2600)}
 
 /* ---------- Study logic ---------- */
-function isDue(id){const t=ts(id);return t.status==='again'||(t.status==='understood'&&t.due&&t.due<=today())}
+function isDue(id){const t=ts(id);const h=t.history;return t.status==='again'||(h.length&&h[h.length-1].score<60)||(t.status==='understood'&&t.due&&t.due<=today())}
 function plan(){
   const due=T.filter(x=>isDue(x.id));
   const fresh=T.filter(x=>ts(x.id).status==='new').slice(0,Math.max(0,S.settings.goal-0));
@@ -2130,28 +2262,30 @@ function render(){document.body.classList.toggle('dark',!!S.settings.dark);rende
   $('#main').innerHTML=view==='today'?vToday():view==='dash'?vDash():vTopic();
   if(view==='topic'&&tab==='cards')drawCard();
 }
-function item(x){const t=ts(x.id);return `<div class="item" data-a="open" data-id="${x.id}"><span class="dot ${t.status}"></span><b>${esc(x.t)}</b><small>${t.last===today()?'&#10003; read today':t.status}</small></div>`}
+function item(x){const t=ts(x.id);return `<div class="item" data-a="open" data-id="${x.id}"><span class="dot ${t.status}"></span><b>${t.star?'&#9733; ':''}${esc(x.t)}</b>${t.tag?`<span class="tag">${t.tag}</span>`:''}<small>${t.last===today()?'&#10003; read today':t.status}</small></div>`}
+function hero(due,fresh,done,nextId){const n=T.length,u=T.filter(x=>ts(x.id).status==='understood').length,pc=Math.round(u/n*100),h=new Date().getHours(),g=h<12?'Good morning':h<17?'Good afternoon':'Good evening',m=S.study[today()]||0;
+  return `<div class="hero"><div class="hl"><p class="eyebrow">${new Date().toDateString()}</p><h2>${g}, Pythonista &#128075;</h2><p>${nextId?`${due.length} to revise &middot; ${fresh.length} new today`:'You are all caught up. Great job!'}</p><div class="chips"><span class="chip">&#128293; ${streak()} day streak</span><span class="chip">&#128214; ${done} read today</span><span class="chip">&#9201; ${m} min focus</span></div>${nextId?`<button class="cta" data-a="open" data-id="${nextId}">Start reading &rarr;</button>`:''}</div><div class="ring" style="--p:${pc}"><b>${pc}%</b><small>${u}/${n} done</small></div></div>`}
 function vToday(){
   const{due,fresh}=plan();const done=T.filter(x=>ts(x.id).last===today()).length;
   const nextId=(due[0]||fresh[0]||{}).id;
-  return `<div class="card"><h2>Today's reading</h2><p class="mute">${new Date().toDateString()} &middot; &#128293; ${streak()} day streak &middot; ${done} topic(s) read today</p>
-  ${nextId?`<button class="pri" data-a="open" data-id="${nextId}">Start reading</button>`:'<p>&#127881; Nothing due. Add more topics from the left or come back tomorrow.</p>'}</div>
+  return `${hero(due,fresh,done,nextId)}
   <div class="card"><h3>&#128260; To revise (${due.length})</h3>${due.map(item).join('')||'<p class="mute">Nothing to revise yet.</p>'}</div>
   <div class="card"><h3>&#127381; New topics for today (${fresh.length})</h3>${fresh.map(item).join('')||'<p class="mute">You have started every topic.</p>'}</div>`;
 }
 function vTopic(){
   const x=BYID[cur];if(!x)return '';const t=ts(cur);
-  const tabs=[['notes','&#128214; Notes'],['pad','&#128221; Notepad'],['explain','&#127908; Explain &amp; rate'],['cards','&#127183; Flashcards']];
+  const tabs=[['notes','&#128214; Notes'],['pad','&#128221; Notepad'],['explain','&#127908; Explain &amp; rate'],['cards','&#127183; Flashcards'],['quiz','&#10067; Quiz']];
   let body='';
   if(tab==='notes')body=`<div class="card"><p>${esc(x.s)}</p><h3>Key points</h3><ul class="pts">${x.p.map(([a,b])=>`<li><b>${esc(a)}</b> - ${esc(b)}</li>`).join('')}</ul>
    <div class="row"><button data-a="speak">&#128266; Listen</button><a class="btn" target="_blank" rel="noopener" href="${x.u?(x.u.indexOf('http')===0?x.u:W+x.u):W}">Open full W3Schools page &#8599;</a></div></div>
    ${detail(x.id)}<div class="card"><h3>My notes from W3Schools</h3><p class="mute">Paste or type the parts you want to remember. The app also uses these when it checks your explanation.</p><textarea data-f="custom" placeholder="Paste your notes here...">${esc(t.custom)}</textarea></div>`;
   if(tab==='pad')body=`<div class="card"><h3>Notepad for ${esc(x.t)}</h3><p class="mute">Saved automatically in this browser.</p><textarea data-f="pad" style="min-height:320px" placeholder="Write your own examples, doubts, code snippets...">${esc(t.pad)}</textarea></div>`;
   if(tab==='explain')body=vExplain(x,t);
+  if(tab==='quiz')body=vQuiz(x);
   if(tab==='cards')body=`<div class="card"><h3>Flashcards</h3><div id="card"></div><div class="row" style="margin-top:10px"><button data-a="fprev">&larr; Prev</button><button data-a="fflip">Flip</button><button data-a="fnext">Next &rarr;</button><button data-a="fshuf">Shuffle</button></div></div>`;
   return `<div class="card"><div class="row"><div class="grow"><h2>${esc(x.t)}</h2><span class="badge ${t.status}">${t.status==='again'?'Study again':t.status==='understood'?'Understood':'New'}</span>
     ${t.due&&t.status==='understood'?`<span class="mute"> next review ${esc(t.due)}</span>`:''}</div>
-    <button class="ok" data-a="mark" data-ok="1">&#10003; I understand it</button><button class="warn" data-a="mark" data-ok="0">&#8635; Need to study again</button></div></div>
+    <button data-a="star">${t.star?'&#9733; Starred':'&#9734; Star'}</button><button data-a="tag">${t.tag?'Tag: '+t.tag:'+ Tag'}</button><button data-a="pomo">${pomo?'&#9209; Stop <span id="pt"></span>':'&#9201; 25 min focus'}</button><button class="ok" data-a="mark" data-ok="1">&#10003; I understand it</button><button class="warn" data-a="mark" data-ok="0">&#8635; Need to study again</button></div></div>
     <div class="tabs">${tabs.map(([k,l])=>`<button class="${tab===k?'on':''}" data-a="tab" data-t="${k}">${l}</button>`).join('')}</div>${body}`;
 }
 function vExplain(x,t){
@@ -2175,7 +2309,7 @@ function vDash(){
   return `<div class="card"><h2>Progress</h2><div class="grid">
    <div class="stat"><b>${u}</b>understood</div><div class="stat"><b>${a}</b>study again</div><div class="stat"><b>${n-u-a}</b>not started</div><div class="stat"><b>${streak()}</b>day streak</div></div>
    <p class="mute">${pct}% of ${n} topics understood</p><div class="bar"><i style="width:${pct}%"></i></div></div>
-  <div class="card"><h3>Daily reminder</h3>
+  ${vExtra()}<div class="card"><h3>Daily reminder</h3>
    <div class="row"><label>Time <input type="time" id="rtime" value="${esc(S.settings.time)}"></label>
    <label>New topics/day <input type="number" id="goal" min="0" max="10" value="${S.settings.goal}" style="width:70px"></label>
    <label><input type="checkbox" id="remind" ${S.settings.remind?'checked':''}> Notify me</label></div>
@@ -2226,10 +2360,50 @@ function makeIcs(){
 }
 function download(name,data,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([data],{type}));a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 
+let pyP=null;
+function getPy(){if(pyP)return pyP;pyP=new Promise((res,rej)=>{const sc=document.createElement('script');sc.src='https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js';sc.onload=()=>loadPyodide().then(res,rej);sc.onerror=()=>{pyP=null;rej(new Error('Could not load Python. Check your internet connection.'))};document.head.appendChild(sc)});return pyP}
+const PROJ=[['todo','To-do list app',['Keep tasks in a list','Add, remove and mark tasks done','Save tasks to a file']],['guess','Number guesser',['Pick a random number','Loop until the guess is right','Give higher/lower hints and count tries']],['csv','CSV report',['Read a CSV file','Total and average a column','Write a summary file']],['quiz','Quiz game',['Store questions in a dictionary','Ask and score answers','Show the final score']]];
+let qz=null,pomo=null;
+const shuf=a=>a.map(v=>[Math.random(),v]).sort((x,y)=>x[0]-y[0]).map(v=>v[1]);
+function mkQuiz(x){const pool=shuf(T.flatMap(y=>y.p.map(q=>q[0])));
+  return shuf(x.p).slice(0,8).map(([a,b])=>{const d=shuf(x.p.map(q=>q[0]).filter(k=>k!==a)).concat(pool).filter((k,i,r)=>k!==a&&r.indexOf(k)===i).slice(0,3);return{b,a,o:shuf([a,...d])}})}
+function vQuiz(x){
+  if(!qz||qz.id!==x.id)return `<div class="card"><h3>Quick quiz</h3><p class="mute">Match each meaning to its key term. A score under 60% puts this topic back in your daily list.</p><button class="pri" data-a="qstart">Start quiz</button></div>`;
+  if(qz.i>=qz.qs.length){const pc=Math.round(qz.s/qz.qs.length*100);return `<div class="card"><h3>Result: ${qz.s}/${qz.qs.length} (${pc}%)</h3><p class="mute">${pc<60?'Added back to your study list.':'Nice work.'}</p><button data-a="qstart">Try again</button></div>`}
+  const q=qz.qs[qz.i];
+  return `<div class="card"><p class="mute">Question ${qz.i+1} of ${qz.qs.length}</p><h3>Which key term means: ${esc(q.b)}?</h3>${q.o.map(o=>`<button style="display:block;width:100%;text-align:left;margin:4px 0" class="${qz.p==null?'':o===q.a?'ok':o===qz.p?'bad':''}" data-a="qpick" data-o="${esc(o)}">${esc(o)}</button>`).join('')}${qz.p==null?'':'<button class="pri" data-a="qnext">Next</button>'}</div>`}
+function logMin(m){if(m>0){S.study[today()]=(S.study[today()]||0)+m;save()}}
+setInterval(()=>{if(!pomo)return;const l=pomo.end-Date.now();if(l<=0){logMin(25);pomo=null;toast('Focus session done: 25 min logged');render();return}const e=$('#pt');if(e)e.textContent=Math.floor(l/60000)+':'+String(Math.floor(l/1000)%60).padStart(2,'0')},1000);
+function vExtra(){
+  let c='';for(let i=83;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const k=dstr(d),m=S.study[k]||0;c+=`<i class="hc ${S.log[k]?(m>=25?'h2':'h1'):''}" title="${k}${m?' - '+m+' min':''}"></i>`}
+  const tot=Object.values(S.study).reduce((a,b)=>a+b,0);
+  const grp=GROUPS.map(([g,ids],gi)=>{const l=ids.filter(i=>BYID[i]),u=l.filter(i=>ts(i).status==='understood').length,p=l.length?Math.round(u/l.length*100):0;return `<p><b>${esc(g)}</b> <span class="mute">${u}/${l.length}</span> <button data-a="cheat" data-g="${gi}">Cheat sheet</button></p><div class="bar"><i style="width:${p}%"></i></div>`}).join('');
+  const fav=T.filter(x=>ts(x.id).star||ts(x.id).tag);
+  const weak=T.filter(x=>{const h=ts(x.id).history;return h.length&&h[h.length-1].score<60});
+  return `<div class="card"><h3>Study calendar (12 weeks)</h3><div class="hm">${c}</div><p class="mute">${tot} focus minutes in total, ${S.study[today()]||0} today. Darker squares mean a 25+ minute day.</p></div>
+  <div class="card"><h3>Progress by group</h3>${grp}</div>
+  <div class="card"><h3>Weak topics</h3>${weak.length?weak.map(item).join(''):'<p class="mute">None. Topics whose latest quiz or explanation score is under 60% appear here and in Today.</p>'}</div>
+  <div class="card"><h3>Starred and tagged</h3>${fav.length?fav.map(item).join(''):'<p class="mute">Use Star and Tag (interview / exam) inside a topic.</p>'}</div>
+  <div class="card"><h3>Mini projects</h3>${PROJ.map(([k,n,st])=>`<p><b>${n}</b></p>${st.map((t,i)=>`<label style="display:block"><input type="checkbox" data-a="proj" data-k="${k}-${i}" ${S.proj[k+'-'+i]?'checked':''}> ${t}</label>`).join('')}`).join('')}</div>`}
+function cheat(gi){const[g,ids]=GROUPS[gi];const h=ids.filter(i=>BYID[i]).map(i=>{const x=BYID[i];return `<h3>${esc(x.t)}</h3><p>${esc(x.s)}</p><ul>${x.p.map(([a,b])=>`<li><b>${esc(a)}</b> - ${esc(b)}</li>`).join('')}</ul>`}).join('');
+  const w=window.open(URL.createObjectURL(new Blob([`<!doctype html><meta charset=utf-8><title>${esc(g)} cheat sheet</title><body style="font:14px/1.5 system-ui;max-width:800px;margin:20px auto"><h1>${esc(g)}</h1>${h}<script>setTimeout(()=>print(),400)<\/script>`],{type:'text/html'})));if(!w)toast('Allow pop-ups to see the cheat sheet')}
 /* ---------- Events ---------- */
 document.addEventListener('click',async e=>{
   const el=e.target.closest('[data-a]');if(!el)return;const a=el.dataset.a;
   if(a==='menu'){$('#side').classList.toggle('open');return}
+  if(a==='star'){const t=ts(cur);t.star=!t.star;save();render();return}
+  if(a==='tag'){const t=ts(cur);t.tag=!t.tag?'interview':t.tag==='interview'?'exam':'';save();render();return}
+  if(a==='pomo'){if(pomo){logMin(Math.floor((Date.now()-pomo.start)/60000));pomo=null}else pomo={start:Date.now(),end:Date.now()+25*60000};render();return}
+  if(a==='proj'){S.proj[el.dataset.k]=el.checked;save();return}
+  if(a==='cheat'){cheat(+el.dataset.g);return}
+  if(a==='qstart'){qz={id:cur,qs:mkQuiz(BYID[cur]),i:0,s:0,p:null};if(qz.qs.length<2){qz=null;toast('Not enough key points for a quiz')}render();return}
+  if(a==='qpick'){if(!qz||qz.p!=null)return;qz.p=el.dataset.o;if(qz.p===qz.qs[qz.i].a)qz.s++;render();return}
+  if(a==='qnext'){qz.i++;qz.p=null;if(qz.i>=qz.qs.length){const pc=Math.round(qz.s/qz.qs.length*100);ts(cur).history.push({d:today(),score:pc,stars:Math.round(pc/20)});S.log[today()]=true;save()}render();return}
+  if(a==='copy'){const c=el.closest('.cb').querySelector('code').textContent;try{await navigator.clipboard.writeText(c);toast('Copied')}catch(x){toast('Copy not allowed here')}return}
+  if(a==='run'){const box=el.closest('.cb'),out=box.querySelector('.out'),code=box.querySelector('code').textContent;out.hidden=false;out.className='out';out.textContent='Running...';
+    try{const py=await getPy();let buf='';py.setStdout({batched:t=>buf+=t+'\n'});py.setStderr({batched:t=>buf+=t+'\n'});
+      const v=await py.runPythonAsync(code);if(v!==undefined&&v!==null)buf+=String(v);out.textContent=buf||'(no output)'}
+    catch(x){out.className='out err';out.textContent=String(x.message||x).split('\n').slice(-6).join('\n')}return}
   if(a==='dark'){S.settings.dark=!S.settings.dark;save();render();return}
   if(a==='view'){view=el.dataset.v;$('#side').classList.remove('open');if(listening)stopMic();render();return}
   if(a==='open'){if(listening)stopMic();view='topic';cur=el.dataset.id;tab='notes';lastResult=null;transcript='';$('#side').classList.remove('open');render();scrollTo(0,0);return}
@@ -2260,9 +2434,12 @@ document.addEventListener('input',e=>{
   if(f==='pad'||f==='custom'){ts(cur)[f]=e.target.value;save()}
 });
 document.addEventListener('change',e=>{
-  if(e.target.id==='imp'){const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);S={topics:d.topics||{},settings:Object.assign({},DEF.settings,d.settings),log:d.log||{}};save();render();toast('Imported')}catch(x){toast('Not a valid backup file')}};r.readAsText(e.target.files[0])}
+  if(e.target.id==='imp'){const r=new FileReader();r.onload=()=>{try{const d=JSON.parse(r.result);S={proj:d.proj||{},study:d.study||{},topics:d.topics||{},settings:Object.assign({},DEF.settings,d.settings),log:d.log||{}};save();render();toast('Imported')}catch(x){toast('Not a valid backup file')}};r.readAsText(e.target.files[0])}
 });
 $('#q').addEventListener('input',renderList);
+
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(()=>{});
+let instEv=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();instEv=e;if(!$('#inst')){const b=document.createElement('button');b.id='inst';b.className='pri';b.textContent='Install app';b.onclick=async()=>{instEv.prompt();await instEv.userChoice;instEv=null;b.remove()};document.querySelector('header').appendChild(b)}});
 setInterval(checkReminder,30000);
 render();checkReminder();
 </script>
