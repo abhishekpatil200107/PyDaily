@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <meta name="theme-color" content="#6366f1">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
@@ -129,19 +131,51 @@ main>*{animation:up .45s both}main>*:nth-child(2){animation-delay:.06s}main>*:nt
 #bn button{flex:1;border:0;background:transparent;font-size:11px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px;border-radius:16px}#bn button span{font-size:19px}
 @media(max-width:800px){#bn{display:flex}main{padding-bottom:96px}#toast{bottom:90px}aside{top:54px;bottom:0;padding-bottom:90px}}
 @media(max-width:560px){.hero{flex-direction:column-reverse;align-items:flex-start;padding:20px}.ring{align-self:flex-end;width:100px;height:100px}.hero h2{font-size:22px}}
+
+/* ===== Modern theme v4 ===== */
+body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+h1,h2,h3,.hero h2,.stat b,.ring b{font-family:Poppins,Inter,system-ui,sans-serif}
+pre,code,.sp-code{font-family:'JetBrains Mono',ui-monospace,Consolas,monospace}
+.ic{width:19px;height:19px;flex:none}.lg{width:30px;height:30px}
+header h1{display:flex;align-items:center;gap:9px;margin:0}
+.rankpill{margin-left:auto;background:var(--grad);color:#fff;padding:5px 13px;border-radius:99px;font-size:12px;font-weight:700;box-shadow:0 4px 14px rgba(99,102,241,.4);white-space:nowrap}
+button,.btn{position:relative;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;background:var(--soft);color:var(--ink);padding:9px 17px;border-radius:13px;font-weight:600;letter-spacing:.01em;box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 1px 3px rgba(30,30,90,.12);transition:transform .15s,box-shadow .2s,filter .2s}
+button:hover,.btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(99,102,241,.25);filter:brightness(1.04)}
+button.ok{background:linear-gradient(135deg,#10b981,#22c55e);color:#fff;box-shadow:0 6px 16px rgba(16,185,129,.35)}
+button.warn{background:linear-gradient(135deg,#f59e0b,#f97316);color:#fff;box-shadow:0 6px 16px rgba(245,158,11,.35)}
+button.bad{background:linear-gradient(135deg,#ef4444,#f43f5e);color:#fff;box-shadow:0 6px 16px rgba(239,68,68,.35)}
+button.pri:hover{box-shadow:0 10px 26px rgba(99,102,241,.5)}
+.rip{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:rp .6s ease-out;pointer-events:none}@keyframes rp{to{transform:scale(1);opacity:0}}
+.nav button{justify-content:flex-start;padding:11px 14px}
+.grp::before{content:"";display:inline-block;width:8px;height:8px;border-radius:3px;background:var(--grad);margin-right:8px}
+.item{padding:9px 10px}.item:hover{background:var(--soft)}
+#bn button{box-shadow:none;border-radius:16px}#bn button:hover{transform:none;box-shadow:none;background:var(--soft)}
+@media(min-width:801px){.layout{grid-template-columns:330px 1fr;padding:14px;gap:16px}aside{border:1px solid var(--line);border-radius:26px;top:70px;max-height:calc(100vh - 86px);box-shadow:0 14px 40px rgba(30,30,90,.1)}}
+#splash{position:fixed;inset:0;z-index:99;display:grid;place-content:center;text-align:center;color:#fff;background:radial-gradient(700px 480px at 50% 38%,#4338ca,#0b1020 72%);transition:opacity .6s,transform .6s}
+#splash.out{opacity:0;transform:scale(1.08);pointer-events:none}
+.sp-logo{width:118px;height:118px;margin:0 auto 14px;animation:pop .9s cubic-bezier(.2,1.4,.4,1) both,fl 3s ease-in-out .9s infinite;filter:drop-shadow(0 12px 34px rgba(99,102,241,.8))}
+@keyframes pop{from{transform:scale(0) rotate(-140deg);opacity:0}to{transform:none;opacity:1}}@keyframes fl{50%{transform:translateY(-9px)}}
+.sp-t{font:800 42px Poppins,system-ui;letter-spacing:.02em;background:linear-gradient(90deg,#fff,#c7d2fe,#f9a8d4);-webkit-background-clip:text;background-clip:text;color:transparent;animation:up .7s .5s both}
+.sp-s{opacity:.9;margin-top:6px;animation:up .7s .8s both}.sp-s b{color:#fde68a}
+.sp-code{font-size:14px;margin:20px auto 0;color:#86efac;overflow:hidden;white-space:nowrap;width:0;border-right:2px solid #86efac;animation:ty 1.2s steps(19) 1s forwards,bl .6s step-end infinite}
+@keyframes ty{to{width:19ch}}@keyframes bl{50%{border-color:transparent}}
+.sp-bar{width:210px;height:5px;border-radius:9px;background:rgba(255,255,255,.18);margin:20px auto 0;overflow:hidden}
+.sp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#fde68a,#f472b6);animation:ld 2.3s ease-out forwards}@keyframes ld{to{width:100%}}
+.rk{background:rgba(255,255,255,.95)!important;color:#4f46e5;font-weight:700}
 </style>
 </head>
 <body>
+<div id="splash"><div class="sp-in"><svg class="sp-logo" viewBox="0 0 64 64"><g><path fill="#4f8cff" d="M32 5c-14 0-13 6-13 6v6h13v2H13S5 18 5 32s7 13 7 13h4v-6s0-7 7-7h13s6 0 6-6V13S46 5 32 5z"/><circle cx="26" cy="12" r="2" fill="#fff"/></g><g transform="rotate(180 32 32)"><path fill="#ffd43b" d="M32 5c-14 0-13 6-13 6v6h13v2H13S5 18 5 32s7 13 7 13h4v-6s0-7 7-7h13s6 0 6-6V13S46 5 32 5z"/><circle cx="26" cy="12" r="2" fill="#7a5c00"/></g></svg><div class="sp-t">PyDaily</div><div class="sp-s">Learn. Practice. <b>Become a Python Expert.</b></div><div class="sp-code">&gt;&gt;&gt; become_expert()</div><div class="sp-bar"><i></i></div></div></div>
 <header>
-  <button id="menu" data-a="menu">&#9776;</button>
-  <h1>&#128013; PyDaily</h1>
-  <button data-a="dark" title="Dark mode">&#9680;</button>
+  <button id="menu" data-a="menu"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg></button>
+  <h1><svg class="lg" viewBox="0 0 64 64"><g><path fill="#4f8cff" d="M32 5c-14 0-13 6-13 6v6h13v2H13S5 18 5 32s7 13 7 13h4v-6s0-7 7-7h13s6 0 6-6V13S46 5 32 5z"/><circle cx="26" cy="12" r="2" fill="#fff"/></g><g transform="rotate(180 32 32)"><path fill="#ffd43b" d="M32 5c-14 0-13 6-13 6v6h13v2H13S5 18 5 32s7 13 7 13h4v-6s0-7 7-7h13s6 0 6-6V13S46 5 32 5z"/><circle cx="26" cy="12" r="2" fill="#7a5c00"/></g></svg>PyDaily</h1><span id="rankpill" class="rankpill"></span>
+  <button data-a="dark" title="Theme"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A9 9 0 1111 3a7 7 0 0010 10z"/></svg></button>
 </header>
 <div class="layout">
   <aside id="side">
     <div class="nav">
-      <button data-a="view" data-v="today">&#128197; Today's reading</button>
-      <button data-a="view" data-v="dash">&#128202; Progress &amp; settings</button>
+      <button data-a="view" data-v="today"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg> Today's reading</button>
+      <button data-a="view" data-v="dash"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg> Progress &amp; settings</button>
     </div>
     <input id="q" placeholder="Search topics...">
     <div id="list"></div>
@@ -149,7 +183,7 @@ main>*{animation:up .45s both}main>*:nth-child(2){animation-delay:.06s}main>*:nt
   <main id="main"></main>
 </div>
 <div id="toast"></div>
-<nav id="bn"><button data-a="view" data-v="today"><span>&#127968;</span>Today</button><button data-a="menu"><span>&#128218;</span>Topics</button><button data-a="view" data-v="dash"><span>&#128202;</span>Progress</button><button data-a="dark"><span>&#127769;</span>Theme</button></nav>
+<nav id="bn"><button data-a="view" data-v="today"><span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></span>Today</button><button data-a="menu"><span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5a2 2 0 012-2h13v16H6a2 2 0 00-2 2z"/><path d="M4 19V5"/></svg></span>Topics</button><button data-a="view" data-v="dash"><span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>Progress</button><button data-a="dark"><span><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13A9 9 0 1111 3a7 7 0 0010 10z"/></svg></span>Theme</button></nav>
 
 <script>
 /* ---------- Topic data (summaries are written in my own words; see W3Schools pages for the full tutorial) ---------- */
@@ -2264,7 +2298,7 @@ function render(){document.body.classList.toggle('dark',!!S.settings.dark);rende
 }
 function item(x){const t=ts(x.id);return `<div class="item" data-a="open" data-id="${x.id}"><span class="dot ${t.status}"></span><b>${t.star?'&#9733; ':''}${esc(x.t)}</b>${t.tag?`<span class="tag">${t.tag}</span>`:''}<small>${t.last===today()?'&#10003; read today':t.status}</small></div>`}
 function hero(due,fresh,done,nextId){const n=T.length,u=T.filter(x=>ts(x.id).status==='understood').length,pc=Math.round(u/n*100),h=new Date().getHours(),g=h<12?'Good morning':h<17?'Good afternoon':'Good evening',m=S.study[today()]||0;
-  return `<div class="hero"><div class="hl"><p class="eyebrow">${new Date().toDateString()}</p><h2>${g}, Pythonista &#128075;</h2><p>${nextId?`${due.length} to revise &middot; ${fresh.length} new today`:'You are all caught up. Great job!'}</p><div class="chips"><span class="chip">&#128293; ${streak()} day streak</span><span class="chip">&#128214; ${done} read today</span><span class="chip">&#9201; ${m} min focus</span></div>${nextId?`<button class="cta" data-a="open" data-id="${nextId}">Start reading &rarr;</button>`:''}</div><div class="ring" style="--p:${pc}"><b>${pc}%</b><small>${u}/${n} done</small></div></div>`}
+  return `<div class="hero"><div class="hl"><p class="eyebrow">${new Date().toDateString()}</p><h2>${g}, ${rankOf(pc).n} &#128075;</h2><p>${nextId?`${due.length} to revise &middot; ${fresh.length} new today`:'You are all caught up. Great job!'}</p><div class="chips"><span class="chip rk">&#9733; ${rankOf(pc).n}</span><span class="chip">&#128293; ${streak()} day streak</span><span class="chip">&#128214; ${done} read today</span><span class="chip">&#9201; ${m} min focus</span></div>${nextId?`<button class="cta" data-a="open" data-id="${nextId}">Start reading &rarr;</button>`:''}</div><div class="ring" style="--p:${pc}"><b>${pc}%</b><small>${u}/${n} done</small></div></div>`}
 function vToday(){
   const{due,fresh}=plan();const done=T.filter(x=>ts(x.id).last===today()).length;
   const nextId=(due[0]||fresh[0]||{}).id;
@@ -2387,6 +2421,12 @@ function vExtra(){
   <div class="card"><h3>Mini projects</h3>${PROJ.map(([k,n,st])=>`<p><b>${n}</b></p>${st.map((t,i)=>`<label style="display:block"><input type="checkbox" data-a="proj" data-k="${k}-${i}" ${S.proj[k+'-'+i]?'checked':''}> ${t}</label>`).join('')}`).join('')}</div>`}
 function cheat(gi){const[g,ids]=GROUPS[gi];const h=ids.filter(i=>BYID[i]).map(i=>{const x=BYID[i];return `<h3>${esc(x.t)}</h3><p>${esc(x.s)}</p><ul>${x.p.map(([a,b])=>`<li><b>${esc(a)}</b> - ${esc(b)}</li>`).join('')}</ul>`}).join('');
   const w=window.open(URL.createObjectURL(new Blob([`<!doctype html><meta charset=utf-8><title>${esc(g)} cheat sheet</title><body style="font:14px/1.5 system-ui;max-width:800px;margin:20px auto"><h1>${esc(g)}</h1>${h}<script>setTimeout(()=>print(),400)<\/script>`],{type:'text/html'})));if(!w)toast('Allow pop-ups to see the cheat sheet')}
+const RANKS=[[0,'PyExpert'],[8,'Beginner'],[20,'Coder'],[40,'Developer'],[65,'Pythonista'],[85,'Python Expert']];
+function rankOf(pc){let r=RANKS[0];for(const x of RANKS)if(pc>=x[0])r={n:x[1]};return r.n?r:{n:r[1]}}
+function updRank(){const u=T.filter(x=>ts(x.id).status==='understood').length,pc=Math.round(u/T.length*100),e=document.querySelector('#rankpill');if(e)e.textContent='\u2605 '+rankOf(pc).n+' \u00b7 '+pc+'%'}
+updRank();setInterval(updRank,1500);
+document.addEventListener('pointerdown',e=>{const b=e.target.closest('button,.btn');if(!b)return;const r=b.getBoundingClientRect(),s=document.createElement('span'),d=Math.max(r.width,r.height)*2;s.className='rip';s.style.cssText=`width:${d}px;height:${d}px;left:${e.clientX-r.left-d/2}px;top:${e.clientY-r.top-d/2}px`;b.appendChild(s);setTimeout(()=>s.remove(),600)});
+{const sp=document.querySelector('#splash'),hide=()=>{sp.classList.add('out');setTimeout(()=>sp.remove(),700)};setTimeout(hide,2600);sp.addEventListener('click',hide)}
 /* ---------- Events ---------- */
 document.addEventListener('click',async e=>{
   const el=e.target.closest('[data-a]');if(!el)return;const a=el.dataset.a;
