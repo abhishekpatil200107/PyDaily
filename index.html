@@ -162,6 +162,9 @@ button.pri:hover{box-shadow:0 10px 26px rgba(99,102,241,.5)}
 .sp-bar{width:210px;height:5px;border-radius:9px;background:rgba(255,255,255,.18);margin:20px auto 0;overflow:hidden}
 .sp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#fde68a,#f472b6);animation:ld 2.3s ease-out forwards}@keyframes ld{to{width:100%}}
 .rk{background:rgba(255,255,255,.95)!important;color:#4f46e5;font-weight:700}
+#inst{padding:7px 14px;font-size:13px;white-space:nowrap;border-radius:99px;flex:none}
+header{gap:8px;flex-wrap:nowrap}header h1{flex:none;font-size:19px}.rankpill{min-width:0;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:480px){.rankpill{padding:4px 9px;font-size:11px}#inst{padding:6px 11px;font-size:12px}header h1{font-size:17px}.lg{width:26px;height:26px}}
 </style>
 </head>
 <body>
@@ -2478,8 +2481,9 @@ document.addEventListener('change',e=>{
 });
 $('#q').addEventListener('input',renderList);
 
-if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(()=>{});
-let instEv=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();instEv=e;if(!$('#inst')){const b=document.createElement('button');b.id='inst';b.className='pri';b.textContent='Install app';b.onclick=async()=>{instEv.prompt();await instEv.userChoice;instEv=null;b.remove()};document.querySelector('header').appendChild(b)}});
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){const had=!!navigator.serviceWorker.controller;navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{});navigator.serviceWorker.addEventListener('controllerchange',()=>{if(had&&!window.__rl){window.__rl=1;location.reload()}})}
+let instEv=null;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();instEv=e;if(!$('#inst')){const b=document.createElement('button');b.id='inst';b.className='pri';b.textContent='Install app';b.onclick=async()=>{instEv.prompt();await instEv.userChoice;instEv=null;b.remove()};{const h=document.querySelector('header');h.insertBefore(b,h.lastElementChild)}}});
+window.addEventListener('appinstalled',()=>{const b=$('#inst');if(b)b.remove()});
 setInterval(checkReminder,30000);
 render();checkReminder();
 </script>
