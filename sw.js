@@ -1,4 +1,4 @@
-const C='pydaily-v8';
+const C='pydaily-v11';
 const FILES=['./','index.html','manifest.json','icon-192.png','icon-512.png','icon-maskable-512.png'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(C).then(c=>Promise.allSettled(FILES.map(f=>c.add(new Request(f,{cache:'reload'}))))).then(()=>self.skipWaiting()));

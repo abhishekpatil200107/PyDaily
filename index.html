@@ -9,7 +9,7 @@
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>PyDaily - Python Notes Tracker</title>
 <style>
 :root{--bg:#f6f7fb;--card:#fff;--ink:#1d2433;--mute:#6b7488;--line:#e3e6ef;--pri:#3b6cf6;--pri-ink:#fff;--ok:#1f9d63;--warn:#e08a00;--bad:#d64545;--soft:#eef2ff}
@@ -178,6 +178,53 @@ main h2{letter-spacing:-.01em}.item b{font-weight:600}
 .tabs button{padding:8px 15px}.tabs button .ic{opacity:.9}
 .hero .cta{display:inline-flex;gap:8px}
 .card{background:linear-gradient(180deg,color-mix(in srgb,var(--card) 100%,transparent),color-mix(in srgb,var(--soft) 35%,var(--card)))}
+/* tabs fix: single scrollable row, nothing clipped */
+.tabs{display:flex!important;flex-wrap:nowrap;gap:6px;width:100%;box-sizing:border-box;overflow-x:auto;overflow-y:hidden;border-radius:18px;padding:6px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:none;white-space:nowrap;overflow:visible;padding:9px 15px}
+.tabs button.on{overflow:visible}
+/* ===== Responsive v6 ===== */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+html,body{max-width:100%;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box}
+img,svg,video,canvas{max-width:100%}
+.layout{grid-template-columns:clamp(270px,24vw,350px) minmax(0,1fr)}
+.layout>main,main{min-width:0;width:100%;max-width:1120px;margin-inline:auto}
+.card,.card *{overflow-wrap:anywhere}
+pre,.out,.hm,table{max-width:100%;overflow-x:auto}pre code{overflow-wrap:normal}
+.grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr))}
+h2{font-size:clamp(20px,4.6vw,28px)}h3{font-size:clamp(16px,3.8vw,19px)}
+body{font-size:clamp(15px,1.6vw + 11px,16.5px)}
+button,.btn,.item{min-height:40px}
+header{padding-top:calc(10px + env(safe-area-inset-top,0px));padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+@media(min-width:801px){aside{max-height:calc(100vh - 86px);max-height:calc(100dvh - 86px)}}
+@media(min-width:801px) and (max-width:1050px){.layout{padding:10px;gap:12px}main{padding:14px}.hero{padding:22px}}
+@media(min-width:1500px){.layout{padding:18px 28px}main{max-width:1240px}}
+@media(max-width:800px){
+  .layout{display:block}
+  main{padding:12px 12px calc(98px + env(safe-area-inset-bottom,0px))}
+  aside{top:0;bottom:0;padding-top:calc(64px + env(safe-area-inset-top,0px));padding-bottom:calc(96px + env(safe-area-inset-bottom,0px));height:100vh;height:100dvh;max-height:none}
+  #bn{bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+  #toast{bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+  .hero{padding:20px}.ring{width:104px;height:104px}
+  .row{gap:6px}.row button{flex:1 1 auto}
+  .tabs{margin-inline:-2px}
+  .stat b{font-size:24px}
+}
+@media(max-width:560px){.hero{flex-direction:column-reverse;align-items:stretch}.ring{align-self:flex-end}.hero .cta{width:100%;justify-content:center}.chips{gap:6px}.chip{font-size:12px;padding:4px 10px}}
+@media(max-width:380px){.rankpill{display:none}header h1{font-size:16px}main{padding-inline:8px}.card{padding:11px}.hero h2{font-size:19px}.sp-t{font-size:34px}}
+@media(max-height:520px) and (orientation:landscape){.sp-logo{width:70px;height:70px}.sp-t{font-size:28px}.sp-bar,.sp-code{margin-top:10px}#bn{display:none}main{padding-bottom:16px}}
+/* topic header + tabs fit (no sliding) */
+.card h2{overflow-wrap:break-word;word-break:normal;hyphens:none}
+.th .grow{flex:1 1 240px;min-width:0}.th h2{margin:0 0 8px;line-height:1.2}
+@media(max-width:560px){
+  .th .grow{flex:1 1 100%}
+  .th button{flex:1 1 calc(50% - 6px)}
+  .th button[data-a=pomo],.th button[data-a=mark]{flex:1 1 100%}
+  .tabs{display:grid!important;grid-auto-flow:column;grid-auto-columns:1fr;gap:4px;padding:5px;overflow:visible;border-radius:18px}
+  .tabs button{flex-direction:column;gap:3px;padding:8px 2px;min-height:58px;font-size:11px;line-height:1.15;white-space:normal;text-align:center;border-radius:14px;min-width:0}
+  .tabs button .ic{width:20px;height:20px;margin:0}
+}
 </style>
 </head>
 <body>
@@ -2334,7 +2381,7 @@ function vTopic(){
   if(tab==='explain')body=vExplain(x,t);
   if(tab==='quiz')body=vQuiz(x);
   if(tab==='cards')body=`<div class="card"><h3>Flashcards</h3><div id="card"></div><div class="row" style="margin-top:10px"><button data-a="fprev">&larr; Prev</button><button data-a="fflip">Flip</button><button data-a="fnext">Next &rarr;</button><button data-a="fshuf">Shuffle</button></div></div>`;
-  return `<div class="card"><div class="row"><div class="grow"><h2>${esc(x.t)}</h2><span class="badge ${t.status}">${t.status==='again'?'Study again':t.status==='understood'?'Understood':'New'}</span>
+  return `<div class="card tcard"><div class="row th"><div class="grow"><h2>${esc(x.t)}</h2><span class="badge ${t.status}">${t.status==='again'?'Study again':t.status==='understood'?'Understood':'New'}</span>
     ${t.due&&t.status==='understood'?`<span class="mute"> next review ${esc(t.due)}</span>`:''}</div>
     <button data-a="star">${t.star?'&#9733; Starred':'&#9734; Star'}</button><button data-a="tag">${t.tag?'Tag: '+t.tag:'+ Tag'}</button><button data-a="pomo">${pomo?'&#9209; Stop <span id="pt"></span>':'&#9201; 25 min focus'}</button><button class="ok" data-a="mark" data-ok="1">&#10003; I understand it</button><button class="warn" data-a="mark" data-ok="0">&#8635; Need to study again</button></div></div>
     <div class="tabs">${tabs.map(([k,l])=>`<button class="${tab===k?'on':''}" data-a="tab" data-t="${k}">${l}</button>`).join('')}</div>${body}`;
